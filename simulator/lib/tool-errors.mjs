@@ -1,0 +1,57 @@
+const safeMessages = {
+        native_station_selection_required: 'The station is not part of a recent authenticated Tesla selection for this account. Do not invent an ID or substitute an address; no read or automatic dispatch was performed.',
+        invalid_command_invocation: 'The operation reference is invalid or belongs to different parameters or an account. No command was sent.',
+        command_invocation_expired: 'The operation reference has expired. No command was resent; do not replace an uncertain result with a new reference.',
+        invalid_arguments: 'Invalid parameters. To check a command, use the exact original arguments, its original request_id, or a status_reference returned by the server. No command was sent.',
+        place_id_unverified: 'One or more destinations lack a verified Place ID in the local catalog or in recent Google results recorded for this account. No payload or command was sent; coordinates are not used as a substitute.',
+        unsupported_operation: 'Unrecognized operation. No command was sent.',
+        command_budget_replayed: 'The proxy rejected a request because its quota or reservation was already consumed. Automatic retry is not authorized.',
+        invalid_confirmation: 'Confirmation is invalid. No command was sent.',
+        expired_or_used_confirmation: 'Confirmation expired or was already used. No command was resent.',
+        confirmation_context_mismatch: 'The confirmation does not match the authorized context. No command was sent.',
+        command_status_lookup_incomplete: 'Status lookup is incomplete and does not prove that the command was not sent. No resend is authorized.',
+        invalid_charging_preferences: 'Charging preferences are invalid. Check tariffs, capacity, consumption, efficiency, and reserve against the charging limit.',
+        tariff_provider_unavailable: 'The official price list is unavailable or could not be interpreted. No assumed prices are used.',
+        invalid_charging_itinerary: 'Valid legs, explicit stop tariffs, capacity, consumption, and efficiency are required. No Tesla request was sent.',
+        invalid_energy_inputs: 'Capacity, consumption, battery, or reserve inputs are missing or invalid. No values are invented.',
+        map_consent_required: 'External maps require consent to send text or coordinates to the provider. No data was sent.',
+        invalid_map_arguments: 'Map arguments are invalid. Specify selected origin and destination.',
+        map_provider_unavailable: 'The map service did not return a verifiable result. No route was sent to Tesla.',
+        command_transport_unsupported: 'This operation is not implemented by the installed Tesla component version. No command or Tesla request was sent.',
+        reauthorize: 'The Tesla connection needs new authorization; no automatic attempt will be made.',
+        budget: 'Tesla quota is exhausted or unavailable. No further request was sent.',
+        rate: 'Wait before requesting another read; the request interval limit is active.',
+        busy: 'A request is already in progress; it was not repeated.',
+        store: 'Persistent storage is unavailable; the operation was stopped.',
+        configuration: 'Backend configuration is incomplete.',
+        disabled: 'This feature is disabled in the server configuration.',
+        upstream: 'Tesla did not return a usable response. No automatic attempt will be made.',
+        permission: 'The Tesla token lacks the permission required for this feature. No operation was performed.',
+        p256_provisioning_disabled: 'Tesla key setup is available only on the authorized Production domain.',
+        p256_aes_key_missing: 'The persistent encryption key is not configured; no cryptographic material was created.',
+        p256_identity_invalid: 'The stored Tesla key failed verification. It was not replaced.',
+        p256_existing_public_key_unverified: 'A Tesla public key is already configured but cannot be verified; no key was created or replaced.',
+        p256_store_unavailable: 'Persistent storage for the Tesla key is unavailable; no key was replaced.',
+        virtual_key_unpaired: 'Tesla does not recognize the virtual key for this vehicle. No command was accepted.',
+        vehicle_unavailable: 'Tesla cannot reach the vehicle, which may be offline or asleep. The operation outcome cannot be confirmed. No automatic attempt will be made. If you want to try, explicitly request one wake_up command; after acceptance, connection may take 10–60 seconds. The MCP client may still show an approval prompt.',
+        cache_unavailable: 'Tesla has no cached data available for this vehicle; no live read was requested.',
+        cache_unsupported: 'Tesla does not support cached reads for this vehicle; no live read was requested.',
+        command_rejected: 'Tesla rejected the command. No second attempt was made.',
+        command_replayed: 'This command request has already been used. It was not repeated.',
+        command_request_replayed: 'This transport request ID has already been used and has no correlatable result. No command was resent. Do not generate replacement IDs to bypass the block.',
+        command_not_dispatched: 'The command was not sent. Another attempt is possible only after a new explicit request.',
+        command_pending: 'An identical command is still in progress or has an uncertain outcome. Check get_vehicle_command_status to reconcile receipts. Checking the display alone does not authorize another dispatch.',
+        command_outcome_unknown: 'The connection ended after dispatch. The outcome is uncertain: do not repeat the command. Check get_vehicle_command_status; absence from the display does not prove failure.',
+        diagnostic_session_invalid: 'The GPS diagnostic session does not exist, expired, belongs to another account, or is not in the accepted Replace phase. Append was not sent.',
+        diagnostic_session_unavailable: 'The GPS diagnostic session cannot be opened because an earlier session or itinerary is still reserved. Replace was not resent.',
+        gps_diagnostic_session_invalid: 'The GPS diagnostic session is invalid or was not started with an accepted Replace. Append was not sent.',
+        command_upstream_unavailable: 'The Tesla command service is unavailable. No automatic attempt will be made.',
+        command_unavailable: 'The command is unavailable with the current configuration. It will not be automatically retried.'
+      };
+export function safeToolFailure(error) {
+  const code = Object.hasOwn(safeMessages, error?.message) ? error.message : 'internal_error';
+  const stage = ['status_selector_validation','status_state_lookup','status_journal_decode'].includes(error?.commandStatusStage) ? error.commandStatusStage : null;
+  return { ...(stage ? {diagnostic:{tool:'get_vehicle_command_status',stage}} : {}), ...(error?.commandStatus ? { command_status: error.commandStatus } : {}), error: { code, message: code === 'internal_error'
+    ? 'Operation unavailable due to an internal error. No automatic attempt will be made.'
+    : safeMessages[code] } };
+}

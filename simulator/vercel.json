@@ -1,0 +1,89 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "functions": {
+    "api/mcp.mjs": {
+      "maxDuration": 30
+    },
+    "api/oauth/tesla/callback.mjs": {
+      "maxDuration": 30
+    },
+    "api/tesla-public-key.mjs": {
+      "maxDuration": 10
+    },
+    "api/oauth/tesla/start.mjs": {
+      "maxDuration": 30
+    },
+    "api/protected-resource.mjs": {
+      "maxDuration": 10
+    },
+    "api/preview-health.mjs": {
+      "maxDuration": 30
+    },
+    "api/tesla-command-proxy.go": {
+      "maxDuration": 30
+    },
+    "api/oauth/tesla/launch.mjs": {
+      "maxDuration": 30
+    },
+    "api/oauth/tesla/partner-registration.mjs": {
+      "maxDuration": 30
+    },
+    "api/oauth/tesla/partner-key-check.mjs": {
+      "maxDuration": 30
+    }
+  },
+  "routes": [
+    {
+      "src": "/mcp",
+      "dest": "/api/mcp"
+    },
+    {
+      "src": "/oauth/tesla/start",
+      "dest": "/api/oauth/tesla/start"
+    },
+    {
+      "src": "/oauth/tesla/launch",
+      "dest": "/api/oauth/tesla/launch"
+    },
+    {
+      "src": "/oauth/tesla/partner-registration",
+      "dest": "/api/oauth/tesla/partner-registration"
+    },
+    {
+      "src": "/oauth/tesla/partner-key-check/([A-Za-z0-9_-]{43})",
+      "dest": "/api/oauth/tesla/partner-key-check"
+    },
+    {
+      "src": "/oauth/tesla/partner-key-check",
+      "dest": "/api/oauth/tesla/partner-key-check"
+    },
+    {
+      "src": "/.well-known/oauth-protected-resource",
+      "dest": "/api/protected-resource"
+    },
+    {
+      "src": "/oauth/tesla/callback",
+      "dest": "/api/oauth/tesla/callback"
+    },
+    {
+      "src": "/.well-known/appspecific/com.tesla.3p.public-key.pem",
+      "dest": "/api/tesla-public-key"
+    },
+    {
+      "src": "/diagnostics/oauth-preview",
+      "dest": "/api/preview-health"
+    },
+    {
+      "src": "/api/tesla-command-proxy",
+      "dest": "/api/tesla-command-proxy"
+    },
+    {
+      "src": "/(.*)",
+      "status": 404
+    }
+  ],
+  "github": {
+    "enabled": false
+  },
+  "buildCommand": "node --test $(find . -maxdepth 1 -name '*.test.mjs' ! -name 'artifact.test.mjs' -print) && mkdir -p public && printf 'User-agent: *\\nDisallow: /\\n' > public/robots.txt"
+}

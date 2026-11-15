@@ -1,0 +1,32 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {localRedis} from '../test-support/redis-rest.mjs';
+import {statusFixture} from '../test-support/mcp-status-fixture.mjs';
+test('Casa persists privately across instances and resolves through MCP without Tesla or public name search',async t=>{
+ const db=await localRedis();t.after(()=>db.close());
+ const make=()=>statusFixture(db,{}, {TESLA_LOCATION_ENABLED:'true'}),f=make();
+ const home={lat:45.551234,lon:9.112345}; // SYNTHETIC private-place fixture.
+ const rpc=(g,name,args={},scope='location:read tesla:connect')=>g.rpc(args,{name,scope});
+ let before=db.calls.length;
+ const denied=await rpc(f,'get_saved_trip_places',{},'battery:read');assert.equal(denied.body.result.isError,true);assert.equal(db.calls.length,before);
+ const missingLocation=await rpc(f,'set_saved_trip_place',{alias:'home',point:home,confirmedByUser:true},'battery:read');assert.equal(missingLocation.result.error.code,'mcp_authorization_required');assert.equal(db.calls.length,before);
+ const saved=await rpc(f,'set_saved_trip_place',{alias:'home',point:home,confirmedByUser:true},'location:read');assert.equal(saved.result.saved,true);assert.ok(db.calls.length>before);
+ const afterSave=db.calls.length;
+ const unconfirmed=await rpc(f,'set_saved_trip_place',{alias:'home',point:home,confirmedByUser:false});assert.equal(unconfirmed.body.error.code,-32602);assert.equal(db.calls.length,afterSave);
+ const second=make();assert.deepEqual((await rpc(second,'get_saved_trip_places')).result.places.home,home);
+ assert.deepEqual((await second.backend.savedTripPlaces.get('other-owner')).places,{});
+ assert.doesNotMatch(JSON.stringify(db.calls),/45\.551234|9\.112345/);
+ const located=(await rpc(second,'search_trip_destination',{query:'Casa',externalMapsConsent:true})).result;
+ assert.equal(located.source,'USER_CONFIRMED_ACCOUNT');assert.deepEqual({lat:located.candidates[0].lat,lon:located.candidates[0].lon},home);assert.equal(located.external_query_performed,false);
+ const original=globalThis.fetch;let routes=0;t.after(()=>{globalThis.fetch=original;});
+ globalThis.fetch=async url=>{assert.equal(new URL(url).hostname,'router.project-osrm.org');routes++;assert.ok(url.includes(home.lon+','+home.lat));return Response.json({code:'Ok',routes:[{distance:5000,duration:600,legs:[{distance:5000,duration:600}]}]});};
+ const args={origin:{lat:45.5,lon:9.1},destination:'Casa',batteryPercent:39,simulatedBattery:true,externalMapsConsent:true};
+ const planned=(await rpc(second,'plan_smart_trip',args,'battery:read location:read')).result;
+ assert.equal(planned.status,'simulated_plan');assert.equal(planned.sent_to_vehicle,false);assert.deepEqual(planned.navigation.ordered_destinations,[home]);assert.equal(routes,1);
+ const preferences=(await rpc(second,'get_charging_preferences',{},'battery:read')).result;assert.doesNotMatch(JSON.stringify(preferences),/45\.551234|home/);
+ assert.equal((await rpc(second,'set_saved_trip_place',{alias:'home',point:null,confirmedByUser:true})).result.saved,false);
+ const missing=(await rpc(make(),'plan_smart_trip',args,'battery:read location:read')).result;
+ assert.equal(missing.status,'needs_saved_place');assert.equal(routes,1);
+ assert.equal(f.teslaCalls()+second.teslaCalls(),0);
+ assert.ok(db.calls.some(c=>c[0]==='EVAL'));assert.ok(db.calls.some(c=>c[0]==='GET'));
+});
