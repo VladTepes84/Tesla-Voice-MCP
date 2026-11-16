@@ -7,15 +7,15 @@ const input = { origin, destination, roundTrip: true, batteryPercent: 70, usable
 test('reverse geocoding returns street and mapped civic candidate without exposing coordinates', async () => {
   const r = await invokeRoadTrip('reverse_trip_location',{center:origin,externalMapsConsent:true},{fetcher:async url => {
     assert.equal(new URL(url).pathname,'/reverse');
-    return Response.json({features:[{geometry:{coordinates:[9,45]},properties:{street:'Via Roma',housenumber:'12',city:'Milano',country:'Italia'}}]});
+    return Response.json({features:[{geometry:{coordinates:[9,45]},properties:{street:'Via Scenario Fittizio',housenumber:'12',city:'Citta Esempio',country:'Italia'}}]});
   }});
-  assert.equal(r.spoken_address,'Via Roma 12, Milano, Italia');
+  assert.equal(r.spoken_address,'Via Scenario Fittizio 12, Citta Esempio, Italia');
   assert.equal(r.exact_address_verified,false);
   assert.doesNotMatch(JSON.stringify(r),/latitude|longitude|coordinates/);
 });
 test('reverse geocoding never invents a civic number and rejects distant map matches', async () => {
   const run = (coordinates, properties) => invokeRoadTrip('reverse_trip_location',{center:origin,externalMapsConsent:true},{fetcher:async()=>Response.json({features:[{geometry:{coordinates},properties}]})});
-  const street = await run([9,45],{street:'Via Roma',city:'Milano'});
+  const street = await run([9,45],{street:'Via Scenario Fittizio',city:'Citta Esempio'});
   assert.equal(street.house_number,null); assert.equal(street.precision,'street');
   const far = await run([10,46],{street:'Wrong street',housenumber:'99'});
   assert.equal(far.address_available,false); assert.equal(far.reason,'no_nearby_map_match');
