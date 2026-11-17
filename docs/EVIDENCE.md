@@ -14,7 +14,7 @@ The source includes `simulator/clean-room-install.test.mjs`, which starts a loca
 
 ## Developer-reported real-vehicle experience
 
-The developer reports operational use and online testing on their own real Tesla, including successful tests of all 75 catalog operations and navigation with up to 16 destinations. These are **developer declarations**, not independent verification. The available account does not specify dates, vehicle/firmware, execution conditions, or the exact software revision and transport configuration used. Offline synthetic tests and this real-vehicle report are separate evidence. Availability still depends on configuration, permissions, vehicle and the pinned SDK's transport limits.
+The developer reports operational use and online testing on their own Tesla Model 3 in October 2026, including successful tests of all 75 catalog operations and navigation with up to 16 destinations. These are **developer declarations**, not independent verification. See the [real vehicle test record](REAL_VEHICLE_TESTING.md) for the 75-operation list and recorded limitations. The available account does not specify exact dates, firmware, execution conditions, or the exact software revision and transport configuration used. Offline synthetic tests and this real-vehicle report are separate evidence. Availability still depends on configuration, permissions, vehicle and the pinned SDK's transport limits.
 
 ## Capability and evidence matrix
 
