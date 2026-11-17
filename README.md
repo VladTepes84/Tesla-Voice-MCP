@@ -44,7 +44,7 @@ The server groups its tools according to **actual runtime gates**, not an implie
 | Trip and energy planning | Energy/reserve calculator, road routing, charging-cost comparison, DC/HPC CCS2 itinerary planning | **Implemented estimates**, not guaranteed navigation feasibility |
 | Public station data | Italian/French/German/Swiss data adapters and OSM candidates; official Free To X card-price lookup | **Provider-dependent**, partial coverage and licensing limits |
 | Vehicle actions | Allowlisted command catalog, preparation/confirmation flow, explicitly requested signed execution, receipt checking | **Implemented transport paths**, require virtual key, feature gates and vehicle validation |
-| Multi-stop navigation | Private waypoint aliases, optional Google Places resolution, native waypoint/GPS experimental paths | **EXPERIMENTAL — route shown in the vehicle NOT verified** |
+| Multi-stop navigation | Navigation-only planning for 2–16 ordered destinations, private waypoint aliases, optional Google Places or OSM, native waypoint/GPS experimental paths | **EXPERIMENTAL — route shown in the vehicle NOT verified** |
 | Security and deployment | OAuth-protected remote MCP, per-tool scopes, encrypted server-side token storage, request budget, CI test definitions | **Implemented controls**, not a security certification |
 
 See [FEATURES.md](docs/FEATURES.md) for **every exposed MCP tool**, supported command families, activation requirements and known restrictions. Tool availability is dynamic; a disabled feature is not equivalent to a working integration.
@@ -90,7 +90,7 @@ The **MCP access token and Tesla OAuth token are different credentials**. The ar
 ## Current limitations
 
 - A working MCP request is not equivalent to a successful **in-car** command. Hardware, firmware, fleet region, vehicle state and permissions matter.
-- **Multi-stop native navigation is experimental.** Preparing `refId` waypoints or accepting signed GPS requests does not prove a 2–4 (or larger) ordered itinerary appears on the display. Repeated single-destination commands are **not** an authorized fallback.
+- **Multi-stop native navigation is experimental.** Preparing `refId` waypoints or accepting signed GPS requests does not prove a 2–16 destination itinerary appears in order on the display. Repeated single-destination commands are **not** an authorized fallback.
 - Google Places is **optional**; it is not bundled, free, or required for basic OSM-based discovery. Google Place IDs and Tesla-native charging-station identifiers are not interchangeable.
 - A mapped address does not certify the exact building entrance; charging-site presence does not certify an open compatible stall; a charger address is not proof of Tesla preconditioning.
 - No automatic polling for historical vehicle reads. Historical app samples accumulate only when tools are called.

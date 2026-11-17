@@ -338,7 +338,7 @@ export function realMcp({ config, backend }) {
               ...(Array.isArray(args.stops)?args.stops:[]),args.destination];
             if(googlePlacesEnabled&&args.navigationOnly===true&&!args.continuationId&&
                args.roundTrip!==true&&args.externalMapsConsent===true&&
-               names.length>=2&&names.length<=4&&names.every(n=>typeof n==='string'&&n.trim())){
+               names.length>=2&&names.length<=16&&names.every(n=>typeof n==='string'&&n.trim())){
               const resolved=await resolveWaypointPlaces({externalMapsConsent:true,stops:names.map(query=>({query}))},{
                 apiKey:config.env.GOOGLE_PLACES_API_KEY,enabled:true,nativeWaypointsEnabled:true,
                 destinationCache:backend.destinationCache,savedTripPlaces:backend.savedTripPlaces,subject});

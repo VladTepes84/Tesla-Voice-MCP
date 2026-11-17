@@ -37,7 +37,7 @@ function naturalNavigationBase(saved){
  const blocked=reason=>({available:false,reason,command_request:null,automatic_dispatch:false,single_destination_fallback_allowed:false});
  const destinations=saved?.destinations,evidence=saved?.place_evidence;
  if(saved?.navigation_only!==true)return blocked('navigation_only_route_required');
- if(!Array.isArray(destinations)||destinations.length<2||destinations.length>4)return blocked('route_requires_2_to_4_destinations');
+ if(!Array.isArray(destinations)||destinations.length<2||destinations.length>16)return blocked('route_requires_2_to_16_destinations');
  if(destinations.some(p=>!p||!Number.isFinite(p.lat)||Math.abs(p.lat)>90||!Number.isFinite(p.lon)||Math.abs(p.lon)>180))return blocked('destination_not_available');
  if(!Array.isArray(evidence)||evidence.length!==destinations.length)return blocked('destination_evidence_missing');
  const trusted=evidence.every(e=>{

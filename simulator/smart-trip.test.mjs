@@ -398,7 +398,7 @@ test('round trip preserves ordered waypoints even when charging is required', as
 });
 
 
-for (const count of [2,3,4]) test('navigationOnly resolves '+count+' ordered places through Photon/OSM without Tesla reads or charging planning',async()=>{
+for (const count of [2,3,4,10,16]) test('navigationOnly resolves '+count+' ordered places through Photon/OSM without Tesla reads or charging planning',async()=>{
  const placeNames=Array.from({length:count},(_,i)=>'POI voce '+i);
  if(count===4)placeNames[count-1]='Casa';
  const mapCalls=[],stored={};
@@ -442,10 +442,10 @@ for (const count of [2,3,4]) test('navigationOnly resolves '+count+' ordered pla
  assert.equal(result.navigation.automatic_dispatch,false);
 });
 
-test('navigationOnly rejects one, five or non-name destinations before map/vehicle access',async()=>{
+test('navigationOnly rejects one, seventeen or non-name destinations before map/vehicle access',async()=>{
  let maps=0,vehicle=0;
  const {deps:{backend}}=setup({preferences:{get:async()=>{vehicle++;throw Error('unexpected');}}});
- for(const names of [['one'],['1','2','3','4','5'],['1',{lat:45.5,lon:9.1}]]){
+ for(const names of [['one'],Array.from({length:17},(_,i)=>'stop-'+i),['1',{lat:45.5,lon:9.1}]]){
   const result=await planSmartTrip({stops:names.slice(0,-1),destination:names.at(-1),
     navigationOnly:true,externalMapsConsent:true},{subject:'owner',now,backend,
     maps:async()=>{maps++;throw Error('unexpected');},plan:async()=>{throw Error('unexpected');}});

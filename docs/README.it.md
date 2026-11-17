@@ -23,7 +23,7 @@ Il progetto non sostituisce l'app Tesla. Aggiunge un livello **conversazionale e
 | Viaggi | Percorsi stradali, stima energia, SOC d'arrivo, riserva minima, soste DC/HPC e preventivi economici | Stime implementate, non garanzie operative |
 | Preferenze | Capacità e consumo dichiarati, efficienza, SOC target, riserva, consenso mappe, alias Casa/Lavoro | Persistenza privata, solo su richiesta |
 | Comandi Tesla | Catalogo di 75 operazioni codificate, preparazione, esecuzione autorizzata, ricevute e audit del tentativo | Gate di sicurezza, hardware e firmware variabili |
-| Navigazione multipoint | Risoluzione nomi, Place ID opzionali e trasporti nativi/GPS sperimentali | **Non verificata come itinerario completo sul display** |
+| Navigazione multipoint | Pianificazione di 2–16 destinazioni ordinate, nomi/Place ID opzionali e trasporti nativi/GPS sperimentali | **Non verificata come itinerario completo sul display** |
 
 ## Esempi concreti
 
