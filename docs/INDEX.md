@@ -46,6 +46,7 @@ flowchart TD
 | Document | Contents |
 | --- | --- |
 | [Beginner's Guide](BEGINNERS_GUIDE.md) | Safe zero-to-offline-test walkthrough and staged setup checkpoints |
+| [Credential-free clean-room simulation](CLEAN_ROOM_SMOKE.md) | A local HTTP/MCP + synthetic OAuth onboarding smoke test; no Tesla, Google or paid host |
 | [Complete installation](INSTALLATION.md) | Prerequisites, accounts, Vercel root, OAuth, encrypted storage, rollout and acceptance |
 | [Getting started](GETTING_STARTED.md) | Condensed operator checklist and acceptance milestones |
 | [Configuration](CONFIGURATION.md) | Environment variables, provider setup, private destinations and gates |

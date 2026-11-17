@@ -179,6 +179,16 @@ cd ..
 
 **You have now tested the source offline. You have not installed a connected Tesla service.** That is a successful and safe first milestone.
 
+## Optional first-install simulation — one command
+
+After cloning the repository, try a clean, independent **MCP request smoke test**:
+
+```sh
+node --test simulator/clean-room-install.test.mjs
+```
+
+**Expected:** one passing test and no Tesla/Google/hosting account required. The test generates a short-lived synthetic RSA key, starts a localhost-only HTTP adapter to the actual MCP handler, verifies OAuth access and returns an invented battery percentage. It **does not** deploy a server or prove a real Tesla integration. For the exact checks, see [Clean-room installation simulation](CLEAN_ROOM_SMOKE.md).
+
 ## 6. Decide whether to connect a real Tesla
 
 If your goal is only to learn or contribute, **stop after step 5**. You can review the [Guided Demo](DEMO.md) and [Tool Reference](TOOLS_REFERENCE.md) without spending money or connecting a vehicle.

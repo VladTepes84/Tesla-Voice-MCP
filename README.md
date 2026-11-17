@@ -133,6 +133,10 @@ Designed for **one authorized operator per isolated instance**, not an arbitrary
 
 ## Try it without a Tesla
 
+**New:** [Run an isolated first-install MCP smoke test](docs/CLEAN_ROOM_SMOKE.md) using synthetic OAuth and a temporary loopback server. It does not need Tesla/Google keys and verifies that a client can discover and call the simulated battery tool.
+
+
+
 Requires **Node.js 22+**, **Go 1.23+** and a local checkout of the repository. From the source root:
 
 ```sh

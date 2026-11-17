@@ -42,6 +42,10 @@ Start at **A**, then **B**. Do not enable vehicle controls just to verify deploy
 
 ## 1. Obtain the source and inspect the prerequisites
 
+To prove the offline MCP request flow with no external credentials, run `node --test simulator/clean-room-install.test.mjs` from a clean checkout. Read [Clean-room installation simulation](CLEAN_ROOM_SMOKE.md) for the exact behavior and limitations.
+
+
+
 ```sh
 git clone https://github.com/<your-fork-or-upstream>/Tesla-Voice-MCP.git
 cd Tesla-Voice-MCP

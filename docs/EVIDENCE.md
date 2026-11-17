@@ -6,6 +6,12 @@ This document tells readers **what source code and tests establish—and what th
 
 **Reference:** sanitized release candidate, inspected on 2026-11-17. For reproducibility, pin the exact Git commit visible on the repository page and verify the current CI runs; do not rely on the review date as a live-deployment attestation.
 
+## Credential-free clean-room smoke test
+
+The source includes `simulator/clean-room-install.test.mjs`, which starts a localhost-only adapter and exercises actual MCP handlers with **ephemeral synthetic OAuth**. It verifies protected-resource discovery, JWT issuer/audience/subject/scope/expiry enforcement, tool listing, synthetic battery read and rejection of unavailable vehicle commands.
+
+**Verified offline (2026-11-17):** [Node/Go/Redis CI run](https://github.com/VladTepes84/Tesla-Voice-MCP/actions/runs/44103169174), 537 Node tests passing, plus [Gitleaks scan](https://github.com/VladTepes84/Tesla-Voice-MCP/actions/runs/44103169101), 11 commits without detected leaks. This does **not** verify a real Tesla account, cloud deployment or any AI provider's OAuth client. Full details: [Clean-room simulation](CLEAN_ROOM_SMOKE.md).
+
 ## Capability and evidence matrix
 
 | Claim | Source reference | Evidence class | Unproven or conditional part |
