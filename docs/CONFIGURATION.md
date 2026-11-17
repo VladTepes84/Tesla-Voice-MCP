@@ -103,6 +103,10 @@ Never use another person's client credentials, tokens, vehicle identifier, priva
 
 ## 4. Optional Google Places setup
 
+For a **beginner-to-production walkthrough** (Google Cloud account, billing, Places API (New), restricted key, `selectedPlaceId`, private Home/Work, test input/output and common errors), follow [Google Places and Place ID setup](GOOGLE_PLACES_SETUP.md). For OSM/Photon/OSRM and charging datasets, use [Map providers](MAP_PROVIDERS.md).
+
+**Guard conditions verified in source:** `GOOGLE_PLACES_SEARCH_ENABLED=true`, a real private `GOOGLE_PLACES_API_KEY`, production deployment (`VERCEL_ENV=production`), applicable native-waypoint gate and explicit `location:read`/map consent. Google and Tesla navigation dispatch have separate permission boundaries. **Do not force a local environment to pretend it is production.**
+
 1. Create your own Google Cloud project and enable Places API (New).
 2. Review Google billing, quotas, regional availability, and terms.
 3. Create a dedicated server-side API key. Restrict it to the required API and, where available, to your hosting egress addresses.

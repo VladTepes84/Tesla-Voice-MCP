@@ -22,6 +22,12 @@ flowchart TD
 
 This is an **advanced, self-hosted remote MCP server**, not a downloadable mobile application, shared hosted Tesla account or one-click ChatGPT plugin. An operator needs their own Tesla Fleet API authorization, HTTPS hosting, OAuth issuer for the MCP client, isolated Redis REST storage, and a compatible client. Do **not** copy the maintainer's deployment or any real credential.
 
+## Before selecting a hosting profile: what are you connecting?
+
+Tesla Voice MCP is **one server for multiple possible AI clients**—ChatGPT, Claude, Gemini, Grok and others—**where remote MCP, OAuth, tool permissions and supported protocol versions align**. Vendor MCP support makes compatibility **plausible, not end-to-end verified** for this exact server. Start in text chat; voice requires separate client support.
+
+Read [AI client-specific setup](AI_CLIENTS.md) and [Voice usage](VOICE_USAGE.md). Map integration is built in at the backend level; optional Google Place IDs have a separate [configuration guide](GOOGLE_PLACES_SETUP.md). OpenStreetMap-based features do not require Google billing.
+
 ## Choose an installation profile
 
 | Profile | What you can validate | Dependencies |

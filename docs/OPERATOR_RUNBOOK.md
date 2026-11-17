@@ -1,5 +1,7 @@
 # Operator runbook — deploy, maintain and recover a private MCP
 
+**Cross-client deployment:** this one-operator remote MCP server is expected to support multiple compatible clients, **not** a shared multi-operator installation. Every AI client requires individual OAuth/protocol and tool-permission validation. Voice execution is not assumed; follow [AI clients](AI_CLIENTS.md), [Voice](VOICE_USAGE.md) and [Compatibility matrix](COMPATIBILITY_MATRIX.md) before claiming support.
+
 **Audience:** experienced developers, security reviewers and self-hosting operators. Start with [Beginner's Guide](BEGINNERS_GUIDE.md) if Git, OAuth, JWTs, HTTPS or Redis are new to you.
 
 **Operating model:** one operator subject per isolated instance. This project is **not** a managed SaaS and does not provide hosting, OAuth credentials or Tesla Fleet access. Keep real commands disabled until separate acceptance checks have passed.

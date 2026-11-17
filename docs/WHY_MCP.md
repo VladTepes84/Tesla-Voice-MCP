@@ -1,5 +1,7 @@
 # Beyond the Tesla API: Why Tesla Voice MCP Exists
 
+**Use from multiple AI systems:** the remote MCP tool interface is not specific to ChatGPT. Claude, Gemini, Grok and other clients have documented remote-MCP integration options, so compatibility is **expected but conditional on their OAuth, tool permissions and protocol support**. These cross-client paths are **not end-to-end tested** with this release. Voice support is a **separate client capability**, not something MCP itself guarantees. Read [AI clients](AI_CLIENTS.md), [Voice Usage](VOICE_USAGE.md) and [Compatibility matrix](COMPATIBILITY_MATRIX.md).
+
 **Vehicle APIs provide capabilities. Tesla Voice MCP turns selected capabilities into discoverable, permission-aware tools and multi-step workflows for AI clients.**
 
 This is the core distinction. Tesla Voice MCP is **not a replacement for Tesla Fleet API**, nor a new Tesla vehicle capability. It is an open-source, self-hosted integration and orchestration layer built around Tesla Fleet API, separate planning logic, maps, charging datasets and the Model Context Protocol (MCP).

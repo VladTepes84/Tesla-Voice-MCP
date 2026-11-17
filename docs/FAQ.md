@@ -2,6 +2,18 @@
 
 Clear answers for first-time visitors, developers, Tesla owners and security reviewers. All examples are generic; this project does not publish any operator's private vehicle/account details.
 
+## Can I connect the same Tesla Voice MCP to Claude, Gemini, Grok and other AI systems?
+
+**The architecture is not ChatGPT-specific.** The same private HTTPS MCP server is intended for other AI clients that support custom remote MCP with compatible authorization, protocol and tool permissions. Vendor documentation establishes potential routes for **Claude, Gemini and Grok**. **Actual end-to-end operation with this repository on those clients is expected but untested**; consult [AI clients](AI_CLIENTS.md) and [Compatibility matrix](COMPATIBILITY_MATRIX.md).
+
+## Can I control my Tesla by speaking to any of those AI systems?
+
+**Not automatically.** The server has no voice engine; the AI platform controls voice recognition and whether voice conversations can invoke custom MCP tools. Text-chat MCP support does not prove voice-mode support. OpenAI's general apps FAQ currently says ChatGPT Voice mode does not support apps. Some vendor developer APIs support voice plus MCP, but require an independently built and validated client. Follow [Voice Usage](VOICE_USAGE.md), beginning with read-only commands.
+
+## Are maps included, and is Google Place ID mandatory?
+
+**Server-side map integrations are included**, not a complete graphical map interface. OSM/Photon/Nominatim/OSRM enable supported searches and planning without Google billing. **Google Places API (New) is optional** for Place-ID resolution workflows and may incur charges. The step-by-step key/Place ID guide is [Google Places setup](GOOGLE_PLACES_SETUP.md); see also [Maps and providers](MAP_PROVIDERS.md).
+
 ## What exactly is Tesla Voice MCP?
 
 An **open-source, self-hosted remote Model Context Protocol server** that exposes selected Tesla Fleet API readings and commands alongside route/charging calculations, mapping tools, private preferences and guardrails to compatible AI clients.

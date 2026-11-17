@@ -11,6 +11,14 @@
 
 The server exposes a **remote, OAuth-protected MCP endpoint**. It is not a ChatGPT subscription feature, an App Store application, a standalone voice assistant or a local-only `stdio` server.
 
+## Supported AI families: expected, not independently tested
+
+This remote MCP server is designed to be used by **ChatGPT, Claude, Gemini, Grok and other clients** when custom remote MCP, an acceptable OAuth flow, tool discovery and the required permissions are available. Vendor documentation establishes those possible integration paths; **compatibility with this exact server is not yet certified on each platform**.
+
+**Use the full step-by-step guide:** [AI clients: ChatGPT, Claude, Gemini, Grok](AI_CLIENTS.md). For speech, see [Voice usage](VOICE_USAGE.md). For evidence status, see [Compatibility matrix](COMPATIBILITY_MATRIX.md).
+
+**Critical distinction:** text-chat tool calls may be available even if an AI's dedicated voice/Live mode cannot invoke third-party tools. OpenAI's current general apps FAQ states Voice mode does not support apps; do not promise automatic ChatGPT Voice execution.
+
 ## Client compatibility requirements
 
 The chosen client must support:

@@ -1,5 +1,7 @@
 # Tesla Voice MCP — Guided product demonstration
 
+**Platform note:** the examples can be read by anyone and are designed for compatible remote-MCP AI clients, including conditional paths through ChatGPT, Claude, Gemini and Grok. They are **not** screenshots of a working integration with each vendor. A text-based tool workflow does **not** guarantee hands-free voice mode. See [AI clients](AI_CLIENTS.md) and [Voice usage](VOICE_USAGE.md).
+
 ## What makes these examples valuable?
 
 Each demonstration shows **which additional logic the server contributes on top of Tesla Fleet API**: source timestamps, local calculations, external data joins, authorization decisions and the difference between prepared, accepted and verified operations.

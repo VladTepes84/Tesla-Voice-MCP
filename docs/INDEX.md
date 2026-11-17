@@ -7,6 +7,8 @@
 | I am... | Read first | Then follow |
 | --- | --- | --- |
 | **A complete beginner** | **[Beginner's Guide](BEGINNERS_GUIDE.md)** | [FAQ](FAQ.md) → [Guided demo](DEMO.md) |
+| **Want to use another AI or voice?** | **[AI clients: ChatGPT / Claude / Gemini / Grok](AI_CLIENTS.md)** | [Voice limitations](VOICE_USAGE.md) → [Compatibility matrix](COMPATIBILITY_MATRIX.md) |
+| **Need maps or Google Place IDs?** | **[Maps and providers](MAP_PROVIDERS.md)** | [Google Places setup](GOOGLE_PLACES_SETUP.md) |
 | **A Tesla owner assessing value** | **[Beyond the Tesla API](WHY_MCP.md)** | [Practical workflows](WORKFLOWS.md) → [Feature catalog](FEATURES.md) |
 | **An experienced installer** | **[Complete installation](INSTALLATION.md)** | [Configuration](CONFIGURATION.md) → [Client setup](CLIENT_SETUP.md) |
 | **A security reviewer** | **[Security model](SECURITY_MODEL.md)** | [Architecture](ARCHITECTURE.md) → [Evidence](EVIDENCE.md) |
@@ -51,6 +53,16 @@ flowchart TD
 | [Client compatibility](CLIENT_COMPATIBILITY.md) | Plan/workspace/client restrictions and official current guidance |
 | [Customization](CUSTOMIZATION.md) | OSM/optional Google, places, preferences, stations and energy assumptions |
 | [Troubleshooting](TROUBLESHOOTING.md) | Decision tree, error causes and sanitized support bundle |
+
+### AI clients, voice and maps
+
+| Document | Contents |
+| --- | --- |
+| **[Connect ChatGPT, Claude, Gemini, Grok and other AI clients](AI_CLIENTS.md)** | Expected remote MCP compatibility, client-specific onboarding, OAuth and read-only smoke tests |
+| **[Voice usage and limitations](VOICE_USAGE.md)** | What speech → MCP tool calls require; examples, safe prompts and platform-specific limitations |
+| **[Compatibility and verification matrix](COMPATIBILITY_MATRIX.md)** | Vendor support vs actual test results; no automatic claims of real-world compatibility |
+| **[Google Places API (New) and Place ID setup](GOOGLE_PLACES_SETUP.md)** | From Google project/billing/key to `resolve_waypoint_places`, disambiguation and safe verification |
+| **[Maps and charging-data providers](MAP_PROVIDERS.md)** | Photon/OSM/Nominatim/OSRM, optional Google, national charging datasets, consent and pricing boundaries |
 
 ### Build, audit and operate
 

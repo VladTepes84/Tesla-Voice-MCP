@@ -19,6 +19,13 @@ For long-term operations and rollback steps, see [Operator runbook](OPERATOR_RUN
 
 Start with the **least invasive** check. Avoid real vehicle calls until authentication, configuration and read-only behavior are understood. Never post credentials, VINs, private addresses, full JWTs or exact GPS traces in public support requests.
 
+## Client, voice and map troubleshooting links
+
+- **Claude/Gemini/Grok cannot connect**: inspect [AI Clients](AI_CLIENTS.md) and [Compatibility matrix](COMPATIBILITY_MATRIX.md). A vendor's support for MCP does not prove this server's OAuth issuer, JWT claims or protocol negotiation are compatible.
+- **Text tools work but voice does not**: follow [Voice Usage](VOICE_USAGE.md); a voice session may not support connected apps even if chat does.
+- **Cannot obtain or choose a Google Place ID**: use [Google Places / Place ID setup](GOOGLE_PLACES_SETUP.md). Do not invent an ID or assume it is Tesla-native.
+- **Wrong map result or station**: see [Map providers](MAP_PROVIDERS.md); ask users to select ambiguous places and keep availability unknown when data is stale.
+
 ## 1. Quick diagnosis
 
 ```mermaid

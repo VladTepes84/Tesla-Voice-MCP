@@ -30,6 +30,10 @@ Never put real values in `simulator/.env.example`, `simulator/config/frequent-de
 
 ## 2. Private frequent destinations
 
+**Do you need to find or save a Google Place ID?** Start with [Google Places setup](GOOGLE_PLACES_SETUP.md). The project can use OSM/Photon/Nominatim/OSRM **without** purchasing Google Places; see [Maps and providers](MAP_PROVIDERS.md).
+
+**Important:** A Google Place ID is not Tesla's native Supercharger identity; it does not guarantee battery preconditioning or on-screen waypoint acceptance.
+
 The tracked catalog is deliberately empty. For a private verified native-waypoint catalog, set `FREQUENT_DESTINATIONS_JSON` in the deployment's private environment.
 
 **Illustrative structure only** (fictional IDs and locations; not valid Tesla navigation references):

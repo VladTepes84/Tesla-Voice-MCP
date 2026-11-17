@@ -2,6 +2,10 @@
 
 ## Find a tool by intent
 
+The **same tool names and schemas** are exposed to any suitably authorized AI client, independent of the AI brand. Whether a given client can call the tool is **conditional** on supported remote MCP transport, OAuth, the client workspace's tool permissions and current server gates. For **ChatGPT/Claude/Gemini/Grok** see [AI clients](AI_CLIENTS.md). For `resolve_waypoint_places` JSON arguments and Google Place IDs, see [Google Places setup](GOOGLE_PLACES_SETUP.md).
+
+
+
 | You want to... | Start with | Why |
 | --- | --- | --- |
 | Check authorization safely | `get_connection_status` | No Tesla request or wake |

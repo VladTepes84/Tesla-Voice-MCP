@@ -1,5 +1,7 @@
 # Practical workflows — from user intent to an MCP result
 
+**Client-independent examples:** these workflows are tool sequences that a compatible **ChatGPT, Claude, Gemini, Grok or other AI client** might request after authorization. They do not depend on a particular AI brand, and **voice invocation is conditional on the client/mode**. For configuration see [AI clients](AI_CLIENTS.md); for voice see [Voice usage](VOICE_USAGE.md).
+
 Every scenario below is **synthetic**. It describes intended tool usage and safety decisions grounded in source, **not** a transcript from a connected Tesla. Use the live `tools/list` response for exact parameters and schema.
 
 ## How to read each workflow

@@ -19,6 +19,12 @@ The project does **not** add privileged Tesla vehicle capabilities or guarantee 
 
 ## How to read the status
 
+**AI platform independence:** These are MCP tool capabilities offered by your server, not built-in ChatGPT features. They are intended to be available to compatible **ChatGPT, Claude, Gemini, Grok and other AI clients**, subject to separate OAuth/transport/tool-permission checks. Integration with those clients is **expected, not independently end-to-end verified** by this repository. Voice invocation must be checked on the chosen AI mode separately.
+
+**Integrations:** [AI client setup](AI_CLIENTS.md) · [Voice](VOICE_USAGE.md) · [Google Places / Place ID](GOOGLE_PLACES_SETUP.md) · [Maps](MAP_PROVIDERS.md).
+
+
+
 - **IMPLEMENTED (source):** a tool, parser or backend path exists in the repository. Nothing here implies live validation.
 - **GATED:** code exists but the feature is hidden or refused until explicit configuration, OAuth scope and/or Tesla registration is complete.
 - **SIMULATED / ESTIMATED:** generated from mock data or supplied assumptions; it is not live data or a command to the car.

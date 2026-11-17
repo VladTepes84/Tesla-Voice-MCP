@@ -8,6 +8,21 @@ Tesla Voice MCP is an experimental, open-source, **self-hosted Model Context Pro
 
 > **Independent community project.** Not affiliated with or endorsed by Tesla or OpenAI. Not a hosted service or a one-click plugin. Every operator must deploy their own server, obtain their own authorization and check account, firmware, vehicle and AI-client compatibility. No live operation or 16-stop on-screen result is guaranteed.
 
+## One MCP server, several AI clients — text first, voice where supported
+
+The same **independently hosted remote MCP server** is designed for integration with **ChatGPT, Claude, Gemini, Grok and other compatible AI clients**. Their vendors document custom remote MCP features, so this project's integration is **expected where transport, OAuth and tool permissions align**. **No end-to-end compatibility claim for those other AI platforms is made without testing.**
+
+```text
+You speak or type -> compatible AI client -> your HTTPS /mcp -> scoped tools
+                                      -> Tesla Fleet API, maps, energy, preferences
+```
+
+**Voice is NOT automatic.** A client must both support this custom MCP connector and permit tool calls during its chosen voice mode. As of this documentation review, OpenAI's general [apps FAQ](https://help.openai.com/en/articles/11487775-connectors-in-chatgpt) states that **ChatGPT Voice mode does not support apps**. xAI documents a **developer** Speech-to-Speech remote MCP path; that is not the same as universal support in a consumer Grok app.
+
+**[AI client setup: ChatGPT / Claude / Gemini / Grok](docs/AI_CLIENTS.md)** · **[Voice capabilities and limits](docs/VOICE_USAGE.md)** · **[Compatibility test matrix](docs/COMPATIBILITY_MATRIX.md)**
+
+**Maps:** OSM/Photon/Nominatim/OSRM-based functionality is integrated on the server side, **not a built-in graphical maps UI**. Optional Google Places API (New) can resolve Place IDs for waypoint preparation, with a separate private key, billing, consent and production gate. [Maps and providers](docs/MAP_PROVIDERS.md) · [Google Places / Place ID setup](docs/GOOGLE_PLACES_SETUP.md).
+
 ## Start here: choose your path
 
 | New to MCP or self-hosting? | Tesla owner exploring capabilities? | Developer, integrator or security reviewer? |
@@ -16,7 +31,7 @@ Tesla Voice MCP is an experimental, open-source, **self-hosted Model Context Pro
 | [FAQ](docs/FAQ.md) — plain-English answers | [Real workflows](docs/WORKFLOWS.md) — battery, travel, charging, commands | [Operator runbook](docs/OPERATOR_RUNBOOK.md) — deployment, diagnostics and recovery |
 | [Installation](docs/INSTALLATION.md) — independent setup | [Capability reference](docs/FEATURES.md) — exact feature inventory | [All 38 MCP tools](docs/TOOLS_REFERENCE.md) and [evidence](docs/EVIDENCE.md) |
 
-**[Full documentation index](docs/INDEX.md)** · **[Why this is more than a Fleet API wrapper](docs/WHY_MCP.md)**
+**[Full documentation index](docs/INDEX.md)** · **[Why this is more than a Fleet API wrapper](docs/WHY_MCP.md)** · **[Connect any compatible AI](docs/AI_CLIENTS.md)** · **[Google Places guide](docs/GOOGLE_PLACES_SETUP.md)**
 
 ## In one minute: what can it do?
 

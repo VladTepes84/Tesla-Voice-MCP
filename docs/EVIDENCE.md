@@ -1,5 +1,7 @@
 # Evidence, readiness and verification boundaries
 
+**Client evidence boundary:** vendors may document custom remote MCP features, but no clean-room test of this release has certified Claude/Gemini/Grok compatibility or their voice modes. Record client-specific results in [Compatibility matrix](COMPATIBILITY_MATRIX.md). A documented possibility or a successful local server test is not proof of a vendor client connection.
+
 This document tells readers **what source code and tests establish—and what they do not**. It is intended for maintainers, auditors, integrators and users who need a precise, non-marketing assessment.
 
 **Reference:** sanitized release candidate, inspected on 2026-11-17. For reproducibility, pin the exact Git commit visible on the repository page and verify the current CI runs; do not rely on the review date as a live-deployment attestation.

@@ -1,5 +1,19 @@
 # Using Tesla Voice MCP with AI clients
 
+## Cross-platform support is an architectural goal, not a tested guarantee
+
+**Expected, conditional integration targets:** ChatGPT, Claude, Gemini, Grok and other remote MCP-capable assistants. This code is **not bound to one AI model**: it exposes protocol tools to clients. Nevertheless, client OAuth registration, transport/version support, write permissions and voice-tool support are separate compatibility requirements.
+
+**Per-client setup:** [AI clients](AI_CLIENTS.md). **Voice:** [Voice usage](VOICE_USAGE.md). **Actual verification status:** [Compatibility matrix](COMPATIBILITY_MATRIX.md).
+
+```text
+AI text/voice capability       != remote custom MCP availability
+Remote custom MCP availability != OAuth/token compatibility
+MCP OAuth success              != Tesla account linked
+Tools discovered               != write tools approved
+API accepted                   != action physically performed
+```
+
 ## At-a-glance compatibility decision
 
 | Question | Required answer before proceeding |

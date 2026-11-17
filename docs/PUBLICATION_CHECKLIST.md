@@ -37,6 +37,9 @@ This checklist is deliberately incomplete until the maintainer performs the indi
 - [ ] Verify current Tesla Fleet API developer terms and limits; do not imply Tesla endorsement or hardware compatibility.
 - [ ] Review [client compatibility](CLIENT_COMPATIBILITY.md) and [configuration](CONFIGURATION.md) against a clean-room onboarding test by a new operator, including external OAuth registration and a first read-only MCP result.
 - [ ] Confirm beginner, technical, marketing and demo documents make the same claims; all examples must be synthetic, all Markdown links valid and all public-facing prose in English.
+- [ ] Verify the [AI-client integration guide](AI_CLIENTS.md) and [compatibility matrix](COMPATIBILITY_MATRIX.md) use **EXPECTED / UNTESTED** where there is no real client evidence, and do not promise voice tool invocations on unsupported surfaces.
+- [ ] Verify the [Google Places / Place ID setup](GOOGLE_PLACES_SETUP.md) and [map provider guide](MAP_PROVIDERS.md) against current code, billing, consent, licensing and experimental Tesla navigation limits.
+- [ ] Independently test at least one fresh OAuth + read-only MCP client connection. Test voice separately; do not declare cross-platform or in-car success from vendor documentation alone.
 - [ ] Check that the project is presented as MCP orchestration layered over Fleet API, not a new Tesla API or a guarantee of 75 live vehicle commands.
 - [ ] Explicitly decide when to make the repository public **after** the checks; do not change production environment settings as part of repository publication.
 

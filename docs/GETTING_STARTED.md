@@ -4,6 +4,12 @@ This is a **condensed operator checklist**. It does not replace the full install
 
 ## Which guide should you follow?
 
+The goal is **not to install this source inside the AI**. Deploy your own remote HTTPS MCP server, then connect an eligible AI app to its `/mcp` endpoint. Your AI may accept typed requests and, **only when its voice mode supports MCP tools**, spoken requests.
+
+For cross-platform connection instructions see [AI clients](AI_CLIENTS.md); for voice limitations see [Voice usage](VOICE_USAGE.md); for optional Google lookup see [Google Places setup](GOOGLE_PLACES_SETUP.md).
+
+
+
 | Goal | Recommended document | First meaningful success |
 | --- | --- | --- |
 | See what the project does | [Guided demo](DEMO.md) + [Why MCP](WHY_MCP.md) | Understand capabilities and their limits |

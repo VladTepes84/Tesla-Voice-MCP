@@ -1,5 +1,30 @@
 # Beginner's Guide — From Zero to Your First MCP Result
 
+## Your own AI assistant — text or supported voice
+
+**You are not installing a new AI model.** You are giving an existing, compatible AI application a set of authorized tools. Once you have **your own** hosted MCP server, you connect it to your chosen AI client:
+
+| First-time question | Short answer |
+| --- | --- |
+| “Will it work only in ChatGPT?” | **No.** It is intended for clients such as Claude, Gemini, Grok and others supporting custom remote MCP. Each integration is **expected, conditional and not yet end-to-end tested with this repository**. |
+| “Do I paste the GitHub link into Claude?” | **No.** Deploy the server first, then add **your own HTTPS `/mcp` URL**. |
+| “Can I just talk to my AI?” | **Only if that specific voice mode can invoke custom MCP tools.** Speech and voice support come from the AI client, not this server; some voice modes cannot use connected apps. |
+| “Do I need Google Maps billing?” | **No** for supported OSM-based searches and basic planning. Google Places is optional for some Place-ID/native-waypoint workflows. |
+| “Will it operate my car automatically?” | **No.** Vehicle commands need separate permissions, explicit user intent and configured safety gates. |
+
+```mermaid
+flowchart LR
+  A["Choose your compatible AI"] --> B["Deploy your private HTTPS MCP server"]
+  B --> C["Connect AI to /mcp via MCP OAuth"]
+  C --> D["First safe tool: connection status or local estimate"]
+  D --> E["Optionally link Tesla account"]
+  E --> F["Use reads/maps/planning; commands require separate authorization"]
+```
+
+**Start with text chat.** Then, where officially supported, test voice with a read-only tool. Successful text MCP integration **does not prove voice-mode integration**.
+
+**Next:** [Connect your AI client](AI_CLIENTS.md) · [How voice works](VOICE_USAGE.md) · [Google Places / Place IDs](GOOGLE_PLACES_SETUP.md) · [Map providers](MAP_PROVIDERS.md).
+
 ## The easiest way to start
 
 **You do not need a Tesla, credit card or hosting account to try the project safely.** First learn what the software does, download it and run the included offline checks. A fully connected Tesla installation is a separate, advanced phase.
@@ -215,6 +240,9 @@ Set the required Tesla app and region variables privately. Use the smallest Flee
 For the exact variable list, follow [Complete Installation](INSTALLATION.md) and [Configuration](CONFIGURATION.md). The file `simulator/.env.example` lists names only; **do not fill it with real secrets and commit it**.
 
 ## 9. Connect a compatible AI client
+
+Choose your supported platform and follow [AI Clients](AI_CLIENTS.md), then consult [Voice Usage](VOICE_USAGE.md) if you intend to speak to the assistant. The first successful test is a **text-based, read-only tool call**, not a vehicle command.
+
 
 1. Confirm your client supports a **custom remote HTTPS MCP server** and its OAuth flow.
 2. Add your own `https://<your-hostname>/mcp` URL through the client's current MCP configuration interface.
