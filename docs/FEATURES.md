@@ -1,6 +1,6 @@
 # Complete feature catalog
 
-**Scope:** `VladTepes84/Tesla-Voice-MCP`, sanitized `main` code reviewed on 2026-11-16, baseline commit `2ea43c11dfaa657186a61e0b9189a5abb51f3777`. This is a **code inventory, not an end-to-end test or a guarantee of Tesla/AI-client compatibility**. The available `tools/list` response changes according to the operator's environment variables and permissions.
+**Scope:** This repository's sanitized source and current release candidate; verify the deployed commit and live `tools/list` before relying on this inventory. This is a **code inventory, not an end-to-end test or a guarantee of Tesla/AI-client compatibility**. The available `tools/list` response changes according to the operator's environment variables and permissions.
 
 ## How to read the status
 

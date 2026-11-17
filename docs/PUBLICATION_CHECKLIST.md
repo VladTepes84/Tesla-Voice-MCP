@@ -4,7 +4,7 @@ This checklist is deliberately incomplete until the maintainer performs the indi
 
 ## Source and history
 
-- [ ] Confirm the target is the sanitized `VladTepes84/Tesla-Voice-MCP` repository, not a private production repository or its deployment.
+- [ ] Confirm the target is the sanitized public-release candidate repository, not a private production repository or its deployment.
 - [ ] Review all tracked files, reachable branches, tags, releases, workflow artifacts, PRs, and commit author metadata for secrets and personal information.
 - [ ] Re-run a dedicated secret scanner against the working tree **and all reachable Git history**, then manually review suspicious fixtures and high-entropy strings. A regex scan alone is insufficient.
 - [ ] Confirm with GitHub Support as appropriate that the accidentally exposed commit is inaccessible from normal public refs; remember deletion from history cannot remove copies already downloaded.

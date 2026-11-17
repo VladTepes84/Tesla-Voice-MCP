@@ -6,7 +6,7 @@ Tesla Voice MCP is an experimental, open-source, **self-hosted Model Context Pro
 
 > **Important:** This repository is source code, not a hosted Tesla service or a one-click ChatGPT plugin. Each user must deploy their own server and configure Tesla Fleet API, OAuth, secure storage, and a compatible MCP client. No vehicle, client plan, firmware, or model is guaranteed to support every feature. This is an independent community project and is **not affiliated with or endorsed by Tesla or OpenAI**.
 
-**[Complete feature catalog](docs/FEATURES.md)** · **[Installation and onboarding](docs/GETTING_STARTED.md)** · **[AI client compatibility](docs/CLIENT_COMPATIBILITY.md)** · **[Architecture and privacy](docs/ARCHITECTURE.md)** · **[Security policy](SECURITY.md)** · **[Panoramica in italiano](docs/README.it.md)**
+**[Documentation hub](docs/INDEX.md)** · **[Guided demo](docs/DEMO.md)** · **[All MCP tools](docs/TOOLS_REFERENCE.md)** · **[Full installation](docs/INSTALLATION.md)** · **[Client setup](docs/CLIENT_SETUP.md)** · **[Customization](docs/CUSTOMIZATION.md)** · **[Security model](docs/SECURITY_MODEL.md)** · **[Troubleshooting](docs/TROUBLESHOOTING.md)**
 
 ## Why use Tesla Voice MCP?
 
@@ -30,6 +30,23 @@ Tesla's official app is designed for direct interaction with the vehicle. This p
 - “Compare two charging tariffs that I provide for this session.”
 - “Prepare navigation to this verified destination.”
 - “Show which vehicle commands this installation currently permits.”
+
+## See it in action — safe, synthetic demonstration
+
+This repository includes a **step-by-step demonstration** of the MCP interaction flow, using only fictional values. The demo covers cached and live battery readings, energy planning, charging comparisons, ambiguous destination resolution, a **2–16 destination navigation-only planner**, guarded vehicle commands, and receipt-based diagnostics.
+
+```text
+Natural-language request
+    -> MCP tool discovery and OAuth scope checks
+    -> validated tool call (read / calculation / map / preparation)
+    -> result with timestamps, provenance and limitations
+    -> separate, explicit authorization for any vehicle write
+    -> receipt + independent verification on the car
+```
+
+**Start here:** [Guided demo](docs/DEMO.md) · [Tool reference (38 MCP tools + 75 command operations)](docs/TOOLS_REFERENCE.md) · [Installation profiles](docs/INSTALLATION.md).
+
+**Verification boundary:** the planner's 16-destination support is tested offline; a full 16-stop route displayed in a vehicle remains experimental and unverified. No example is a real Tesla transcript.
 
 ## Feature overview
 
