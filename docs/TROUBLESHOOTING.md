@@ -1,5 +1,22 @@
 # Troubleshooting and diagnostic playbook
 
+## Diagnose without guessing
+
+Before editing configuration, record **which boundary failed**. A missing tool can mean a gate, a denied tool call can mean an OAuth scope, and a Tesla-accepted command can still fail to appear on the car. These problems should not be "fixed" by enabling every flag.
+
+| Observed failure | First layer to inspect | Never do this |
+| --- | --- | --- |
+| Cannot reach `/mcp` | Hosting, root directory, HTTPS, routes | Publish a secret-bearing debug endpoint |
+| Client cannot authenticate | MCP OAuth issuer, audience, signature, subject | Disable OAuth or paste a Tesla token into chat |
+| Tool is missing | Runtime gate, client scope, cached tool list | Assume source implementation means tool exposed |
+| Data unavailable or stale | Cached/live semantics and Tesla state | Manufacture a new timestamp |
+| Charger not found or wrong | Provider consent, availability, query ambiguity | Invent a station or price |
+| Multi-stop "accepted" but no itinerary | Experimental transport and physical display | Fire repeated single-destination requests |
+| Command outcome unknown | Server receipt, independent car state | Blindly retry a physical operation |
+
+For long-term operations and rollback steps, see [Operator runbook](OPERATOR_RUNBOOK.md).
+
+
 Start with the **least invasive** check. Avoid real vehicle calls until authentication, configuration and read-only behavior are understood. Never post credentials, VINs, private addresses, full JWTs or exact GPS traces in public support requests.
 
 ## 1. Quick diagnosis

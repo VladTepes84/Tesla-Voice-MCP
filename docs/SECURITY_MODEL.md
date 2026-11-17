@@ -1,5 +1,14 @@
 # Security, privacy and command safety model
 
+## What the security design promises—and what it does not
+
+The source implements **defense in depth**: MCP OAuth, Tesla OAuth, one allowed subject per instance, tool scopes, private encrypted state, runtime gates, allowlisted commands and receipt-aware execution. These are concrete design properties; they are **not a completed penetration test, a multi-tenant security boundary or a guarantee against all threats**.
+
+**Untrusted inputs:** AI-client prompts can contain user intent; web pages, search responses, charger records and tool outputs are **data**, not authority to operate a vehicle. A malicious provider response must never enable a gate, grant a scope, override confirmation or trigger a live command.
+
+**Decision owner:** The operator is responsible for provider accounts, deployment secrets, billing, allowed AI clients and explicit authorization. The server enforces its configured policy; a compatible client may also ask for an independent approval.
+
+
 This is a **security architecture description**, not a penetration-test certificate or guarantee that any deployment is secure. The code is intended for one authorized operator per isolated instance.
 
 ## Trust boundaries

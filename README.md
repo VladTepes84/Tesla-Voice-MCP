@@ -1,121 +1,124 @@
 # Tesla Voice MCP
 
-**Talk to your Tesla through an AI assistant — with your own MCP server, your own credentials, and explicit control over what can access or change the vehicle.**
+**Beyond the Tesla API: one assistant-ready layer for vehicle data, deliberate commands, trip intelligence and charging decisions.**
 
-Tesla Voice MCP is an experimental, open-source, **self-hosted Model Context Protocol (MCP) server** that connects compatible AI clients to selected Tesla Fleet API capabilities. It combines vehicle readings, permission-gated remote commands, trip and charging calculations, mapping providers, and a conversational interface supplied by the client.
+Tesla Voice MCP is an experimental, open-source, **self-hosted Model Context Protocol (MCP) server** that connects compatible AI clients to selected Tesla Fleet API capabilities—and combines them with road routing, energy estimates, charging-source discovery, private preferences and explicit command safeguards.
 
-> **Important:** This repository is source code, not a hosted Tesla service or a one-click ChatGPT plugin. Each user must deploy their own server and configure Tesla Fleet API, OAuth, secure storage, and a compatible MCP client. No vehicle, client plan, firmware, or model is guaranteed to support every feature. This is an independent community project and is **not affiliated with or endorsed by Tesla or OpenAI**.
+**The distinction:** Tesla Fleet API supplies authorized vehicle data and operations. **This project supplies typed MCP tools, multi-provider workflows, provenance and security gates.** Your AI client supplies conversational reasoning and, if supported, voice. It is not a model, a standalone voice app or a replacement for Tesla's official app.
 
-**[Start here — Beginner's guide](docs/BEGINNERS_GUIDE.md)** · **[Documentation hub](docs/INDEX.md)** · **[Guided demo](docs/DEMO.md)** · **[All MCP tools](docs/TOOLS_REFERENCE.md)** · **[Full installation](docs/INSTALLATION.md)** · **[Client setup](docs/CLIENT_SETUP.md)** · **[Customization](docs/CUSTOMIZATION.md)** · **[Security model](docs/SECURITY_MODEL.md)** · **[Troubleshooting](docs/TROUBLESHOOTING.md)**
+> **Independent community project.** Not affiliated with or endorsed by Tesla or OpenAI. Not a hosted service or a one-click plugin. Every operator must deploy their own server, obtain their own authorization and check account, firmware, vehicle and AI-client compatibility. No live operation or 16-stop on-screen result is guaranteed.
 
-## Why use Tesla Voice MCP?
+## Start here: choose your path
 
-Tesla's official app is designed for direct interaction with the vehicle. This project offers a different layer: **ask questions and request authorized operations in natural language from an AI client**, combining data from the vehicle with calculations and external maps when permitted.
-
-| Benefit | What this implementation adds | Important limitation |
+| New to MCP or self-hosting? | Tesla owner exploring capabilities? | Developer, integrator or security reviewer? |
 | --- | --- | --- |
-| Conversational interaction | The AI client can call typed MCP tools instead of requiring manual navigation across separate screens. | Voice input/output is provided by the **client**; this server has no standalone voice app or built-in speech engine. |
-| Vehicle context | Cached and on-demand battery/status readings, connection status, selected history and schedules. | The data may be cached, incomplete, unavailable, or subject to Tesla request costs. |
-| Trip and energy reasoning | Route distance, explicit battery/consumption assumptions, reserve checks, charging-site search and price comparison. | Estimates are not official Tesla navigation or real-time charger availability. |
-| More deliberate command control | Separate read, location and control scopes; commands require enabled gates and user intent. | Code-level command support does **not** prove a given vehicle can execute an operation. |
-| Operator-managed infrastructure | Your own hosting, Tesla application, OAuth issuer, encryption key and private store. | Self-hosting creates operational and security responsibilities; it does not eliminate third-party data access. |
-| Open and extensible code | Inspect tool contracts, providers, tests and guardrails; adapt your own deployment. | Changes require maintenance and must comply with provider terms. |
+| **[Beginner's Guide](docs/BEGINNERS_GUIDE.md)** — safe offline trial, step by step | **[Guided demo](docs/DEMO.md)** — see synthetic end-to-end scenarios | **[Architecture & security](docs/ARCHITECTURE.md)** — implementation and trust boundaries |
+| [FAQ](docs/FAQ.md) — plain-English answers | [Real workflows](docs/WORKFLOWS.md) — battery, travel, charging, commands | [Operator runbook](docs/OPERATOR_RUNBOOK.md) — deployment, diagnostics and recovery |
+| [Installation](docs/INSTALLATION.md) — independent setup | [Capability reference](docs/FEATURES.md) — exact feature inventory | [All 38 MCP tools](docs/TOOLS_REFERENCE.md) and [evidence](docs/EVIDENCE.md) |
 
-**Examples of requests to a compatible assistant** (illustrative only; execution depends on the configured tools and permissions):
+**[Full documentation index](docs/INDEX.md)** · **[Why this is more than a Fleet API wrapper](docs/WHY_MCP.md)**
 
-- “What is my battery level, and when was that reading collected?”
-- “Check the latest vehicle state without waking it.”
-- “Estimate whether a 230 km trip preserves a 15% battery reserve.”
-- “Find CCS2 fast chargers near this route, marking unknown prices or availability as unknown.”
-- “Compare two charging tariffs that I provide for this session.”
-- “Prepare navigation to this verified destination.”
-- “Show which vehicle commands this installation currently permits.”
+## In one minute: what can it do?
 
-## See it in action — safe, synthetic demonstration
+<details>
+<summary><strong>1. Ask about the car</strong> — battery, status, history, connectivity</summary>
 
-This repository includes a **step-by-step demonstration** of the MCP interaction flow, using only fictional values. The demo covers cached and live battery readings, energy planning, charging comparisons, ambiguous destination resolution, a **2–16 destination navigation-only planner**, guarded vehicle commands, and receipt-based diagnostics.
+Use timestamped cached readings without implicit wake, or explicitly request an on-demand vehicle read. Selected charging history, connectivity, schedules and app-collected samples are exposed when available. Live reads can use Tesla quota and may contact or wake the car.
 
-```text
-Natural-language request
-    -> MCP tool discovery and OAuth scope checks
-    -> validated tool call (read / calculation / map / preparation)
-    -> result with timestamps, provenance and limitations
-    -> separate, explicit authorization for any vehicle write
-    -> receipt + independent verification on the car
+**Representative tools:** `get_battery`, `get_vehicle_status`, `get_live_vehicle_data`, `get_vehicle_reading_history`, `get_charging_history`.
+
+</details>
+
+<details>
+<summary><strong>2. Plan a trip</strong> — road distance, estimated energy, reserve</summary>
+
+Combine supplied capacity/consumption/SOC assumptions with road distances, reserve checks and charging planning. Calculations are transparent estimates, not Tesla's internal range model.
+
+**Representative tools:** `estimate_trip_energy`, `plan_trip`, `plan_road_trip`, `plan_charging_road_trip`, `plan_smart_trip`.
+
+</details>
+
+<details>
+<summary><strong>3. Compare charging options</strong> — mapped stations, CCS2 candidates, tariffs</summary>
+
+Discover charging stations through OSM and selected national data sources, plan bounded DC/HPC CCS2 stops and compare operator-supplied €/kWh and session fees. Google Places is **optional**, not required for basic OSM search.
+
+**Representative tools:** `find_charging_sites`, `plan_charging_road_trip`, `compare_charging_costs`, `get_free_to_x_card_tariffs`.
+
+</details>
+
+<details>
+<summary><strong>4. Prepare complex destinations</strong> — private aliases and 2–16 ordered stops</summary>
+
+Resolve ambiguous names, use private confirmed Home/Work aliases and prepare **navigation-only itineraries of 2–16 ordered destinations**. This is source-supported and offline-tested. **Vehicle-side native/GPS multipoint delivery remains experimental**; Tesla API acceptance is not proof that all stops display in the car. Energy-mode planning allows at most eight intermediate stops.
+
+**Representative tools:** `search_trip_destination`, `get_saved_trip_places`, `resolve_waypoint_places`, `plan_smart_trip`, `get_planned_trip`.
+
+</details>
+
+<details>
+<summary><strong>5. Prepare and, if authorized, execute vehicle commands</strong> — gated operations and receipts</summary>
+
+A source catalog defines **75 vehicle operation names** spanning charging, climate, access, security, navigation, vehicle/software and media. **Eight default SDK transports are unavailable** in the pinned proxy, with separately gated experiments for some navigation paths; counts are not proof of vehicle compatibility.
+
+Commands require appropriate Tesla authorization, MCP scopes, feature gates, explicit intent and, where applicable, virtual-key pairing. Follow the preparation/confirmation or guarded direct execution path. Do not assume a receipt proves a physical result.
+
+**Representative tools:** `get_vehicle_command_catalog`, `prepare_vehicle_command`, `execute_vehicle_command`, `execute_requested_vehicle_command`, `get_vehicle_command_status`.
+
+</details>
+
+## A realistic example: one request, several capabilities
+
+> **User:** “Estimate a 230 km journey with a 15% reserve, look for CCS2 fast-charging alternatives, compare two prices I provide, and prepare the destinations. Don't send anything to the car.”
+
+```mermaid
+flowchart TD
+    U["User's request"] --> A["AI client: understands intent"]
+    A --> B["Remote /mcp: OAuth + scope checks"]
+    B --> C["Road routing / charger source with consent"]
+    B --> D["Energy / reserve / tariff calculations"]
+    C --> E["Organized plan: sources + uncertainty"]
+    D --> E
+    E --> F["Prepared navigation candidates"]
+    F --> G["Assistant explains choices; no vehicle command"]
 ```
 
-**Start here:** [Guided demo](docs/DEMO.md) · [Tool reference (38 MCP tools + 75 command operations)](docs/TOOLS_REFERENCE.md) · [Installation profiles](docs/INSTALLATION.md).
+A plain Fleet API call retrieves or changes Tesla data. The workflow above **combines multiple distinct concerns** into assistant-consumable results. A custom REST application could implement comparable orchestration; MCP makes this implementation discoverable to compatible assistants. See the [fully worked synthetic scenarios](docs/WORKFLOWS.md).
 
-**Verification boundary:** the planner's 16-destination support is tested offline; a full 16-stop route displayed in a vehicle remains experimental and unverified. No example is a real Tesla transcript.
+## What exactly is the advantage over direct API integration?
 
-## Feature overview
+| Direct Tesla Fleet API | Tesla Voice MCP |
+| --- | --- |
+| Authorized vehicle data and command endpoints | Assistant-discoverable tool catalog with schemas and per-tool OAuth scopes |
+| Vehicle responses require custom UI/consumer logic | Timestamp-aware cached/live read tools and structured errors |
+| External maps, route planning and price logic require separate implementation | Road routing, mapped charging candidates, energy and tariff calculators |
+| Developer designs their own conversation layer | Remote MCP integration for **compatible** AI clients; client supplies the model/voice |
+| Tesla-side command authorization | Additional server-side allowlists, gates, intent/confirmation flows, receipts and no-blind-retry policy |
+| Native Tesla behavior depends on model/firmware | Same dependency, **plus** transparent “prepared/accepted/observed” distinctions |
 
-The server groups its tools according to **actual runtime gates**, not an implied guarantee that every feature is enabled everywhere.
+**Read the full, evidence-based comparison:** [Beyond the Tesla API](docs/WHY_MCP.md). The project does not claim capabilities unavailable to traditional custom software; it packages a particular set of workflows around MCP.
 
-| Area | Implemented software capabilities | Readiness |
-| --- | --- | --- |
-| Account connection | Tesla OAuth linking, connection/permission diagnostics, virtual-key setup assistance | **Implemented**, deployment and Tesla authorization required |
-| Battery and status | Cached battery and vehicle state; on-demand live reads; connectivity; timestamps and recent collected readings | **Implemented**, Tesla availability/quotas apply |
-| Charging and schedules | Charging-session history, charge/preconditioning schedule reads, nearby Tesla charging-site discovery | **Implemented**, dependent on scopes and returned fields |
-| Maps and places | Destination lookup, reverse geocoding, ambiguity handling, consent gates, private Home/Work aliases | **Implemented**, external provider accuracy varies |
-| Trip and energy planning | Energy/reserve calculator, road routing, charging-cost comparison, DC/HPC CCS2 itinerary planning | **Implemented estimates**, not guaranteed navigation feasibility |
-| Public station data | Italian/French/German/Swiss data adapters and OSM candidates; official Free To X card-price lookup | **Provider-dependent**, partial coverage and licensing limits |
-| Vehicle actions | Allowlisted command catalog, preparation/confirmation flow, explicitly requested signed execution, receipt checking | **Implemented transport paths**, require virtual key, feature gates and vehicle validation |
-| Multi-stop navigation | Navigation-only planning for 2–16 ordered destinations, private waypoint aliases, optional Google Places or OSM, native waypoint/GPS experimental paths | **EXPERIMENTAL — route shown in the vehicle NOT verified** |
-| Security and deployment | OAuth-protected remote MCP, per-tool scopes, encrypted server-side token storage, request budget, CI test definitions | **Implemented controls**, not a security certification |
-
-See [FEATURES.md](docs/FEATURES.md) for **every exposed MCP tool**, supported command families, activation requirements and known restrictions. Tool availability is dynamic; a disabled feature is not equivalent to a working integration.
-
-## How it fits together
+## Architecture at a glance
 
 ```text
-AI client (text and optionally voice)
-          │ compatible remote MCP + OAuth access token
-          ▼
-  Your HTTPS /mcp endpoint
-          │ validates issuer, audience, subject, token and scopes
-          ▼
-  Tesla Voice MCP (Node.js + Go command proxy)
-          ├── encrypted, private Redis REST store
-          ├── Tesla Fleet API / vehicle commands (only when authorized)
-          └── optional maps, routing and charging-data sources (with consent)
+Your compatible AI client (chat / optional voice)
+       |
+       | MCP OAuth token — separate from Tesla OAuth
+       v
+Your HTTPS /mcp endpoint
+       |
+       +-- JWT issuer/audience/subject + per-tool scopes + feature gates
+       +-- Encrypted private Redis REST store
+       +-- Tesla Fleet API (authorized reads and guarded signed commands)
+       +-- OSM/Photon/OSRM + optional Google Places, with consent
+       +-- Station data + trip/energy/charging estimates
 ```
 
-The **MCP access token and Tesla OAuth token are different credentials**. The architecture is designed for **one authorized operator per isolated instance**, not an open multi-user public service. The server does not publish the operator's credentials for reuse by others.
+Designed for **one authorized operator per isolated instance**, not an arbitrary shared multi-user deployment.
 
-## Installation: what each user must supply
+## Try it without a Tesla
 
-1. **Tesla access:** their own Tesla account and Fleet API application, plus any required enrollment, authorized scopes and virtual-key pairing.
-2. **Infrastructure:** an HTTPS deployment (the supplied configuration targets Vercel with `simulator/` as the root), a separate OAuth provider for the MCP client, and a private Redis REST store.
-3. **Secrets:** server-side Tesla credentials, subject, token-store credentials and a distinct encryption key; never commit them.
-4. **Client:** a chat/AI application that actually supports remote MCP plus the required OAuth workflow and permitted tools. ChatGPT account/workspace support varies by plan.
-5. **Optional providers:** Google Places API (New) with user-managed quotas/billing; public OSM and national charging sources have their own policies.
-
-**Read the complete [getting-started guide](docs/GETTING_STARTED.md) before deployment.** The baseline setup is not simply “paste a Tesla key into ChatGPT.” The endpoint is `https://<your-hostname>/mcp`; a local-only server cannot be connected to all remote AI clients without a supported bridge/tunnel.
-
-## Safety, privacy and costs
-
-- **No default live commands:** command execution requires explicitly configured gates and an authorized user request. Some diagnostic steps require explicit user inspection of the vehicle display.
-- **No implicit `wake_up` or automatic repeat on uncertain execution:** a successful tool response or Tesla API acknowledgment is **not** proof of vehicle actuation.
-- **No credentials or personal address catalog in the published example:** `simulator/.env.example` contains variable names only and `simulator/config/frequent-destinations.json` is empty.
-- **No free-service promise:** Tesla API calls, hosting, OAuth, Redis, map requests and third-party data can create costs. Apply quotas, budgets and provider alerts.
-- **Not a replacement for safety-critical driving decisions:** estimated routes, range, arrival charge, power, charging availability and rates need independent verification.
-- **Data privacy is conditional:** self-hosting gives the operator control of the server, but Tesla, the chosen AI client, OAuth and mapping providers process data according to their own policies. Location queries are consent-gated in this code.
-
-**Never post a VIN, live GPS location, token, Tesla client secret, private key, personal charging agreement or home/work address in a public issue or commit.** See [SECURITY.md](SECURITY.md).
-
-## Current limitations
-
-- A working MCP request is not equivalent to a successful **in-car** command. Hardware, firmware, fleet region, vehicle state and permissions matter.
-- **Multi-stop native navigation is experimental.** Preparing `refId` waypoints or accepting signed GPS requests does not prove a 2–16 destination itinerary appears in order on the display. Repeated single-destination commands are **not** an authorized fallback.
-- Google Places is **optional**; it is not bundled, free, or required for basic OSM-based discovery. Google Place IDs and Tesla-native charging-station identifiers are not interchangeable.
-- A mapped address does not certify the exact building entrance; charging-site presence does not certify an open compatible stall; a charger address is not proof of Tesla preconditioning.
-- No automatic polling for historical vehicle reads. Historical app samples accumulate only when tools are called.
-- No built-in native iPhone app, speech engine, standalone consumer dashboard, billing service, or ready-made hosted account for arbitrary users.
-
-## Development and validation
-
-Requires **Node.js 22+ and Go 1.23+**. The repository defines offline tests and a GitHub Actions workflow. From the repository root:
+Requires **Node.js 22+**, **Go 1.23+** and a local checkout of the repository. From the source root:
 
 ```sh
 node simulator/prepare-artifact.mjs
@@ -123,12 +126,36 @@ node --test simulator/*.test.mjs
 (cd simulator && go test ./... && go build ./... && go vet ./...)
 ```
 
-The artifact preparation step writes only to ignored `simulator/dist` locally; it does **not** deploy. The Redis-backed integration tests need an isolated local test store and are also defined in `.github/workflows/tesla-multipoint-ci.yml`. **Do not aim tests at your real vehicle or production Redis.** Passing these tests does not establish live compatibility.
+These are local/offline checks using synthetic fixtures, **not a deployment, Tesla login, live command or real-car test**. The separate Redis integration suite requires isolated test storage. Check the [Beginner's Guide](docs/BEGINNERS_GUIDE.md) for a non-technical walk-through and common failures.
 
-**Maintainer release gate:** check [PUBLICATION_CHECKLIST.md](docs/PUBLICATION_CHECKLIST.md) and run the full tests on the final commit before changing visibility. The repository's public-release readiness and real-world user onboarding must be verified separately.
+## Connect your own instance
 
-## Licensing, contributions and attribution
+A real deployment requires:
 
-The code is distributed under the [MIT License](LICENSE). Third-party packages, Tesla Fleet API, Google Places, hosting, public geocoders and charging datasets retain their own terms; OpenStreetMap data requires attribution and ODbL compliance. Some Swiss charging-station data has a non-commercial reuse restriction. See [ARCHITECTURE.md](docs/ARCHITECTURE.md) and [CONFIGURATION.md](docs/CONFIGURATION.md).
+1. **Your own Tesla Fleet API application** and authorized Tesla account, including the required region/scopes; signed commands may need virtual-key pairing.
+2. **Your own HTTPS host**, with the included Vercel configuration targeting `simulator/` as the project root.
+3. **MCP OAuth**, separate from Tesla authorization: RS256 issuer/JWKS, resource audience `<APP_ORIGIN>/mcp`, one authorized subject and least-privilege scopes.
+4. **Your own private Redis REST store** and server-side encryption key.
+5. **A compatible remote-MCP AI client**, with the necessary plan/workspace permissions.
+6. **Optional providers** such as Google Places (New), configured privately under their own billing and quota terms.
 
-Contributions are welcome after publication; see [CONTRIBUTING.md](CONTRIBUTING.md). Review third-party terms before redistributing datasets or building a commercial service. This project provides no warranty, guaranteed savings, safety certification, or Tesla endorsement.
+**[Complete installation](docs/INSTALLATION.md)** · **[AI client setup](docs/CLIENT_SETUP.md)** · **[Configuration](docs/CONFIGURATION.md)** · **[Operator runbook](docs/OPERATOR_RUNBOOK.md)**
+
+**Costs:** Tesla Fleet API usage is metered. Hosting, storage, OAuth and optional external providers may charge. Configure provider billing limits and explicit request budgets. This is not a guaranteed free or zero-configuration service.
+
+## Safety and evidence: read before using commands
+
+- **Read-only, estimated, prepared, dispatched, provider-accepted and vehicle-observed are different states.**
+- No automatic wake during cached reads and no blind retry when a command outcome is unknown.
+- The 2–16 destination planner is **offline-tested**; an ordered 16-stop route visibly working on a car is **not established** by that test.
+- An ordinary charger address is **not** a Tesla-native Supercharger selection and does not guarantee battery preconditioning.
+- Locations can leave the deployment through consented map searches. Self-hosting does not prevent data processing by Tesla, the AI client or other selected providers.
+- Never publish personal identifiers, VINs, exact GPS traces, private addresses, tokens, credential material or contract-specific tariffs.
+
+**[Evidence and limits](docs/EVIDENCE.md)** · **[Security model](docs/SECURITY_MODEL.md)** · **[Security policy](SECURITY.md)**
+
+## Project maturity and contribution
+
+**Implemented source:** the reference tool catalog, calculations, provider adapters and guarded command paths. **Offline tests:** separate Node, Go, isolated Redis and secret-scan workflows. **Deployment and real-world outcomes:** must be validated independently for each installation.
+
+This repository contains source code, not an operational hosted tenant or official product support. Third-party data terms remain separate from the project's [MIT License](LICENSE); review attribution and commercial restrictions before reuse. See [Contributing](CONTRIBUTING.md) and the [public-release checklist](docs/PUBLICATION_CHECKLIST.md).

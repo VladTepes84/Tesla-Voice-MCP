@@ -1,53 +1,87 @@
-# Documentation hub
+# Tesla Voice MCP — Documentation center
 
-**Tesla Voice MCP — comprehensive English-language operator and developer manual.** All examples are synthetic and contain no real account, vehicle, credential, private address or location data. The source is a self-hosted remote MCP implementation, not a public hosted service.
+**Choose your role. Follow the shortest path to a verifiable result.** All material is in English. All sample values, destinations and transcripts are synthetic.
 
-## Choose your path
+## Start by audience
 
-| You want to... | Start here | Then read |
+| I am... | Read first | Then follow |
 | --- | --- | --- |
-| **First time here?** | **[Beginner's guide — start from zero](BEGINNERS_GUIDE.md)** | [Guided demonstration](DEMO.md) |
-| Understand the project's capabilities | [Guided demonstration](DEMO.md) | [Feature catalog](FEATURES.md) |
-| Review every MCP tool and vehicle command group | [Complete tool reference](TOOLS_REFERENCE.md) | [Live catalog behavior](FEATURES.md#5-remote-tesla-commands) |
-| Install without controlling a real car | [Installation: Profile A](INSTALLATION.md#choose-an-installation-profile) | [Getting started](GETTING_STARTED.md) |
-| Deploy your own read-only MCP | [Installation](INSTALLATION.md) | [Configuration](CONFIGURATION.md) |
-| Connect an AI client | [Client setup](CLIENT_SETUP.md) | [Client compatibility](CLIENT_COMPATIBILITY.md) |
-| Personalize maps, saved places and energy assumptions | [Customization](CUSTOMIZATION.md) | [Configuration](CONFIGURATION.md) |
-| Understand authorization and data protection | [Security model](SECURITY_MODEL.md) | [Security policy](../SECURITY.md) |
-| Diagnose a failed tool, OAuth flow or navigation | [Troubleshooting](TROUBLESHOOTING.md) | [Architecture](ARCHITECTURE.md) |
-| Audit release readiness | [Publication checklist](PUBLICATION_CHECKLIST.md) | [Security model](SECURITY_MODEL.md) |
-| Contribute to the project | [Contributing](../CONTRIBUTING.md) | [Architecture](ARCHITECTURE.md) |
+| **A complete beginner** | **[Beginner's Guide](BEGINNERS_GUIDE.md)** | [FAQ](FAQ.md) → [Guided demo](DEMO.md) |
+| **A Tesla owner assessing value** | **[Beyond the Tesla API](WHY_MCP.md)** | [Practical workflows](WORKFLOWS.md) → [Feature catalog](FEATURES.md) |
+| **An experienced installer** | **[Complete installation](INSTALLATION.md)** | [Configuration](CONFIGURATION.md) → [Client setup](CLIENT_SETUP.md) |
+| **A security reviewer** | **[Security model](SECURITY_MODEL.md)** | [Architecture](ARCHITECTURE.md) → [Evidence](EVIDENCE.md) |
+| **An engineer or maintainer** | **[Tool reference](TOOLS_REFERENCE.md)** | [Operator runbook](OPERATOR_RUNBOOK.md) → [Contributing](../CONTRIBUTING.md) |
 
-## Capability overview
+## Guided learning path
 
 ```mermaid
 flowchart TD
-    U["Compatible AI client: chat / voice"] --> MCP["Private HTTPS MCP server"]
-    MCP --> AUTH["OAuth + scope / gate validation"]
-    AUTH --> READ["Battery, status, history, schedules"]
-    AUTH --> MAP["OSM / optional Google / road routing"]
-    AUTH --> ENERGY["Energy and charging estimates"]
-    AUTH --> NAV["2–16 destination navigation-only planner"]
-    AUTH --> COMMAND["Guarded signed vehicle commands"]
-    READ --> TESLA["Tesla Fleet API"]
-    COMMAND --> TESLA
-    MAP --> PROVIDERS["Consented external providers"]
-    NAV --> EXP["Experimental navigation transport; vehicle display verification pending"]
+    A["What is this?"] --> B["Why MCP: differences from direct API"]
+    B --> C{"What do you want to do?"}
+    C -->|Understand| D["Demo + real workflows + FAQ"]
+    C -->|Try without Tesla| E["Beginner's Guide: offline checks"]
+    C -->|Deploy| F["Installation + configuration + client setup"]
+    C -->|Audit / extend| G["Tools + architecture + security + evidence"]
+    F --> H["Private read-only acceptance checks"]
+    H --> I["Optional maps and trip planning"]
+    I --> J["Explicitly authorized controls / experimental navigation"]
 ```
 
-## Status vocabulary
+## Complete manual
 
-- **Implemented:** a tool or transport exists in source.
-- **Gated:** requires specific server settings, OAuth scopes, provider permissions or vehicle pairing.
-- **Estimated:** a calculation using explicit assumptions; not live telemetry.
-- **Experimental:** not proven to work across vehicles/firmware; independent validation required.
-- **Verified offline:** automated unit/integration test evidence only.
-- **Verified on vehicle:** independently observed physical or in-car result, with the test scope stated.
+### Understand the product
 
-A successful `tools/call` response or Tesla API acknowledgment **never automatically proves physical vehicle execution**.
+| Document | Contents |
+| --- | --- |
+| [Beyond the Tesla API](WHY_MCP.md) | Architecture value, concrete differentiators, honest comparison to direct Fleet API and custom REST development |
+| [Guided product demo](DEMO.md) | Eight synthetic use-case demonstrations with tool flow and expected results |
+| [Practical workflows](WORKFLOWS.md) | Battery, energy, charging economics, geocoding, 16-stop planning, commands and recovery |
+| [FAQ](FAQ.md) | Plain-English answers, pricing/requirements, compatibility and limitations |
+| [Feature catalog](FEATURES.md) | Source-backed overview of supported tool families and command groups |
 
-## Non-goals and limits
+### Install and personalize
 
-The repository does not provide a built-in speech engine, standalone iOS app, a universal charging-price feed, automatic background polling, shared multi-user SaaS, universal Tesla compatibility or a guaranteed native 16-stop route. Google Places is optional; operator-managed provider costs and terms apply.
+| Document | Contents |
+| --- | --- |
+| [Beginner's Guide](BEGINNERS_GUIDE.md) | Safe zero-to-offline-test walkthrough and staged setup checkpoints |
+| [Complete installation](INSTALLATION.md) | Prerequisites, accounts, Vercel root, OAuth, encrypted storage, rollout and acceptance |
+| [Getting started](GETTING_STARTED.md) | Condensed operator checklist and acceptance milestones |
+| [Configuration](CONFIGURATION.md) | Environment variables, provider setup, private destinations and gates |
+| [Client setup](CLIENT_SETUP.md) | Remote MCP, ChatGPT when eligible, OAuth, safe first prompts |
+| [Client compatibility](CLIENT_COMPATIBILITY.md) | Plan/workspace/client restrictions and official current guidance |
+| [Customization](CUSTOMIZATION.md) | OSM/optional Google, places, preferences, stations and energy assumptions |
+| [Troubleshooting](TROUBLESHOOTING.md) | Decision tree, error causes and sanitized support bundle |
 
-For installation, use the **English documentation only**. Never commit credentials, personal routes, VINs, private tariff contracts or real GPS data.
+### Build, audit and operate
+
+| Document | Contents |
+| --- | --- |
+| [Complete tool reference](TOOLS_REFERENCE.md) | 38 MCP tools, scopes, 75 command catalog, status/error semantics |
+| [Architecture](ARCHITECTURE.md) | Modules, trust boundaries, API/data sources, licensing and provenance |
+| [Security model](SECURITY_MODEL.md) | Threats, token isolation, user intent, vehicle-command lifecycle and incident constraints |
+| [Operator runbook](OPERATOR_RUNBOOK.md) | Preflight, private deployment, monitoring, recovery, provider costs and go/no-go |
+| [Evidence and readiness](EVIDENCE.md) | Source vs mock vs provider accepted vs independently car-verified |
+| [Security policy](../SECURITY.md) | Private vulnerability reporting and deployment responsibilities |
+| [Contributing](../CONTRIBUTING.md) | Repository practices, tests and safe contribution requirements |
+| [Public-release checklist](PUBLICATION_CHECKLIST.md) | Mandatory release gates; no automatic approval or visibility change |
+
+## What is currently supported, and what is not?
+
+- **Tool inventory:** 38 named MCP tools in the source-backed catalog; dynamic visibility depends on scopes and feature gates.
+- **Commands:** 75 operation names in code; eight default SDK transports unavailable in the pinned proxy, with some experimental exceptions. Not a promise of 75 working features on every car.
+- **Navigation:** 2–16 ordered **navigation-only** destinations accepted by the planner; separate energy-routing mode has a maximum of eight intermediate stops. Native/GPS multipoint delivery is experimental, **not independently verified as a complete on-screen route**.
+- **AI and voice:** provided by the **client**; this repository does not ship a standalone speech engine.
+- **Data and cost:** cached readings may be old; route/charging costs are estimates; Tesla and other providers may meter usage.
+- **Tenant model:** one authorized operator per isolated deployment; not a shared public SaaS.
+
+## Proof terminology
+
+`IMPLEMENTED` (exists in code) → `VERIFIED_OFFLINE` (mock/isolation tests) → `PROVIDER_ACCEPTED` (real service acknowledged) → `VEHICLE_VERIFIED` (independent physical observation). Each has a different evidence requirement. See [Evidence](EVIDENCE.md).
+
+## First actions
+
+**Just exploring?** Start with [Beginner's Guide](BEGINNERS_GUIDE.md) or [Guided demo](DEMO.md). No Tesla credentials required for the offline stage.
+
+**Ready to integrate?** Begin with [Complete installation](INSTALLATION.md); do not paste credentials into a chat or tracked file.
+
+**Evaluating the design?** Start with [Beyond the Tesla API](WHY_MCP.md), [Tools](TOOLS_REFERENCE.md) and [Architecture](ARCHITECTURE.md).

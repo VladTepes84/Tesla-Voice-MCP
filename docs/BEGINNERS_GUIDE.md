@@ -1,5 +1,32 @@
 # Beginner's Guide — From Zero to Your First MCP Result
 
+## The easiest way to start
+
+**You do not need a Tesla, credit card or hosting account to try the project safely.** First learn what the software does, download it and run the included offline checks. A fully connected Tesla installation is a separate, advanced phase.
+
+```text
+Understand it -> Download source -> Run offline checks -> Stop or choose deployment
+                                                       -> Configure OAuth and Tesla
+                                                       -> Connect compatible client
+                                                       -> Read cached data first
+```
+
+**If you only have five minutes:** read [Why this MCP is different](WHY_MCP.md), scan the [guided demonstration](DEMO.md), then follow **steps 2–5 below** to validate a local checkout. Those steps never send an operation to a vehicle.
+
+### Four words you will see often
+
+| Term | Plain-English meaning |
+| --- | --- |
+| **API** | A defined way for software to request data or an action from another service |
+| **MCP tool** | A specific capability an AI client can discover and request, with typed inputs |
+| **OAuth** | A controlled authorization process; here the AI client's permission and Tesla's permission are separate |
+| **Deploy** | Run your own server on an HTTPS-capable host so a remote client can reach it |
+
+### What will prove you succeeded?
+
+After the offline steps, Node and Go test commands finish with **zero failures**. That establishes a working **local test environment**, not a configured MCP client or connected Tesla. After a real deployment, the first success is **authenticated MCP tool discovery plus a timestamped cached reading (if one is available)**—never an unsolicited vehicle command.
+
+
 **New here? Start on this page.** No Tesla commands will be sent by following the first part of this guide.
 
 > **Important:** Tesla Voice MCP is a self-hosted developer project, **not a one-click application**. You need to configure your own server, accounts, authentication and private storage before connecting a real car. If you have never deployed a web application or configured OAuth, the full setup will require learning those concepts. The safe offline walkthrough below is suitable for beginners.

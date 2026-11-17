@@ -1,5 +1,20 @@
 # Complete feature catalog
 
+## What this catalog represents
+
+The implementation exposes **38 named MCP tools** across the five major reference groups, plus **75 operation names** in the separate Tesla command catalog. Not all MCP tools appear simultaneously: runtime feature gates and OAuth scopes control discovery and invocation. The command count is a **code inventory**, not a count of tested physical features.
+
+| Added layer | Why it matters to a user | Source / evidence |
+| --- | --- | --- |
+| Assistant-facing tool interface | Natural-language requests can invoke typed, discoverable MCP tools | `simulator/lib/real-mcp.mjs`; compatible client required |
+| Context and provenance | Cached/live distinctions, timestamps and app-collected samples | Tesla/store modules; no continuous polling guarantee |
+| Trip and charging logic | Reserve calculations, mapped stations, CCS2 corridors and tariff comparisons | Road-trip/charging/energy modules; estimated outcomes |
+| Multi-destination preparation | Explicit ordering and ambiguity handling for 2–16 navigation-only stops | Smart-trip and waypoint modules; in-car completion unverified |
+| Command lifecycle and policy | Scoped, allowlisted, gated writes with receipts | Command and security modules; physical result separately verified |
+
+The project does **not** add privileged Tesla vehicle capabilities or guarantee that an AI client supports every operation. See [Why MCP](WHY_MCP.md), [Workflows](WORKFLOWS.md) and [Evidence](EVIDENCE.md).
+
+
 **Scope:** This repository's sanitized source and current release candidate; verify the deployed commit and live `tools/list` before relying on this inventory. This is a **code inventory, not an end-to-end test or a guarantee of Tesla/AI-client compatibility**. The available `tools/list` response changes according to the operator's environment variables and permissions.
 
 ## How to read the status

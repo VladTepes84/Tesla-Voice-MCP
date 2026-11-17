@@ -1,8 +1,89 @@
 # Complete MCP tool reference
 
+## Find a tool by intent
+
+| You want to... | Start with | Why |
+| --- | --- | --- |
+| Check authorization safely | `get_connection_status` | No Tesla request or wake |
+| Read an existing battery snapshot | `get_battery` | Timestamped cache, not a fresh read |
+| Explicitly refresh the car | `get_live_vehicle_data` | On-demand, potentially metered |
+| Estimate travel energy | `estimate_trip_energy` | Local, assumption-based math |
+| Plan a charging corridor | `plan_charging_road_trip` | Bounded DC/HPC CCS2 search |
+| Resolve a destination | `search_trip_destination` | Explicit map consent and ambiguity handling |
+| Prepare an ordered itinerary | `plan_smart_trip` | Navigation-only 2–16; preparation is not dispatch |
+| See potential vehicle actions | `get_vehicle_command_catalog` | Catalog visibility is not authorization to execute |
+| Inspect a previous command | `get_vehicle_command_status` | Journal receipt; no blind repeat |
+
+**Two different counts:** **38 MCP tools** are callable interface entry points; **75 operation names** are command definitions processed through specific command tools. The 75 operations are not 75 separate MCP servers, independent chat skills or guaranteed in-car functions. See [Why MCP](WHY_MCP.md) and [Evidence](EVIDENCE.md).
+
+
 **Source of truth:** `simulator/lib/real-mcp.mjs`, its imported tool modules, `simulator/lib/mcp-tool-auth.mjs`, `simulator/lib/operation-plans.mjs` and [FEATURES.md](FEATURES.md). The catalog is **conditional**: a tool can be absent or denied because of deployment flags, scopes or missing provider setup. A tool definition does not guarantee an operational Tesla command.
 
 This document inventories **38 named MCP tools** from the source-backed feature catalog, plus the separate **75-operation vehicle command catalog**. Do not confuse 38 MCP entry points with 75 command operations.
+
+## Source-verified input examples
+
+The following objects use argument names and constraints from the current source. They are **illustrative tool-call arguments**, not live provider responses, CLI commands or Tesla interactions. A compatible MCP client supplies these as a tool's arguments after authentication; do **not** paste them as raw text into the `/mcp` URL.
+
+### A. Pure calculation — `estimate_trip_energy`
+
+```json
+{
+  "distanceKm": 200,
+  "consumptionKwhPer100Km": 16,
+  "usableCapacityKwh": 60,
+  "batteryPercent": 80,
+  "reservePercent": 15
+}
+```
+
+All five keys are required. Their units are **km, kWh/100 km, kWh and percentages**, respectively. This example calculates approximately **26.7% arrival SOC**. It reads no Tesla data, uses no map provider and sends no vehicle command. Source: `simulator/lib/energy-estimate.mjs`.
+
+### B. Compare supplied tariffs — `compare_charging_costs`
+
+```json
+{
+  "energyToBatteryKwh": 30,
+  "efficiencyPercent": 90,
+  "first": {
+    "label": "Example A",
+    "eurPerKwh": 0.40,
+    "fixedFeeEur": 0
+  },
+  "second": {
+    "label": "Example B",
+    "eurPerKwh": 0.32,
+    "fixedFeeEur": 3
+  }
+}
+```
+
+All four top-level keys are required. Each tariff needs `label`, `eurPerKwh` and `fixedFeeEur`; `powerKw` is optional. At 90% efficiency, the purchased energy would be about 33.33 kWh, giving illustrative costs of **€13.33 and €13.67**. These are **fictional** tariffs, not real network offers. Source: `simulator/lib/charge-cost-comparison.mjs`.
+
+### C. Prepare an ordered itinerary — `plan_smart_trip`
+
+```json
+{
+  "navigationOnly": true,
+  "stops": ["Example Park", "Example Museum"],
+  "destination": "Example Library",
+  "externalMapsConsent": true
+}
+```
+
+This schema demonstrates **three ordered destinations**: each element of `stops` followed by `destination`. The navigation-only schema allows at most **15 stops plus the final destination**, totaling **16**. The names above are deliberately fictional; do not expect a public geocoder to find them. Geocoding requires user consent and may return an ambiguity response. The tool prepares/stores a plan and **does not send it to Tesla**. Source: `simulator/lib/smart-trip.mjs`.
+
+### D. Read-only tools with no arguments
+
+`get_battery`, `get_connection_status`, `get_vehicle_status` and `get_vehicle_command_catalog` use an empty input object, for example:
+
+```json
+{}
+```
+
+Their behavior is **not identical**: connection/catalog checks use stored state; battery/status reads use Tesla cache. Never infer that a no-argument tool is automatically free of provider costs without checking its individual definition.
+
+**Where to find every other exact schema:** read the tool's `inputSchema` from the authenticated MCP `tools/list` response, or inspect the named source module in [Architecture](ARCHITECTURE.md). The live schema is authoritative for the deployed commit.
 
 ## 1. Reading the reference
 

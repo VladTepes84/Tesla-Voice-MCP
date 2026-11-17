@@ -1,5 +1,25 @@
 # Complete installation and operator onboarding
 
+## Installation in one diagram
+
+```mermaid
+flowchart TD
+  A["Offline checkout and tests"] --> B["Private HTTPS host (simulator root)"]
+  B --> C["Isolated Redis REST + encryption key"]
+  C --> D["MCP OAuth issuer, JWKS, audience and subject"]
+  D --> E["Your Tesla Fleet application + callback"]
+  E --> F["Compatible AI client to /mcp"]
+  F --> G["MCP authorization and Tesla linking"]
+  G --> H["Read-only first acceptance"]
+  H --> I["Optional maps / trip planning"]
+  I --> J["Optional signed controls after separate safety approval"]
+```
+
+**How to use this guide:** If you are new to the terminology, start with [Beginner's Guide](BEGINNERS_GUIDE.md). For operational monitoring, rollback and incidents, use [Operator runbook](OPERATOR_RUNBOOK.md). No step automatically grants permission to operate a Tesla.
+
+**Stop conditions:** If you cannot configure an isolated Redis store, secure MCP OAuth issuer, exact HTTPS origin or Tesla application safely, **do not enable live vehicle control**. An incomplete setup is preferable to bypassing authentication or publishing credentials.
+
+
 This is an **advanced, self-hosted remote MCP server**, not a downloadable mobile application, shared hosted Tesla account or one-click ChatGPT plugin. An operator needs their own Tesla Fleet API authorization, HTTPS hosting, OAuth issuer for the MCP client, isolated Redis REST storage, and a compatible client. Do **not** copy the maintainer's deployment or any real credential.
 
 ## Choose an installation profile

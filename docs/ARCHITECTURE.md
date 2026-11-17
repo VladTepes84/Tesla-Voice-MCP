@@ -1,5 +1,22 @@
 # Architecture, security boundaries and third-party data
 
+## Why MCP instead of a conventional Tesla-only client?
+
+A conventional integration can call Tesla endpoints directly. This implementation separates **conversation (the client)**, **tool contracts and policy (the MCP server)**, **vehicle capability (Fleet API)** and **calculation/provider data (routing, charging and local models)**. The separation allows compatible AI clients to reuse a structured tool surface without embedding vehicle credentials or custom application logic in the assistant itself.
+
+```mermaid
+flowchart LR
+    U["User"] --> AI["AI client: language / voice"]
+    AI --> S["MCP tool contracts + policy"]
+    S --> T["Tesla Fleet API"]
+    S --> R["Private encrypted state"]
+    S --> P["Consented maps / station sources"]
+    S --> E["Local energy / tariff calculations"]
+```
+
+**Architectural boundaries:** MCP is not the intelligence model, Tesla OAuth is not MCP OAuth, a cached reading is not live telemetry, and an API receipt is not physical vehicle evidence. Read [Beyond the Tesla API](WHY_MCP.md) and [Evidence](EVIDENCE.md) for the grounded value proposition and verification vocabulary.
+
+
 ## Component model
 
 ```text

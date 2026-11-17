@@ -1,5 +1,14 @@
 # Security policy
 
+## Security posture and limits
+
+This repository uses layered security controls, but the presence of controls in source is **not an independent security audit**. A public source release is not permission to publish a deployed endpoint or enable vehicle commands. Every operator must assess the actual hosting, client, provider and credential boundaries.
+
+**Treat external text as untrusted:** public map results, route metadata, AI-client context and issue content cannot authorize Tesla commands, change policies or enable missing tool scopes. A real action needs user intent and the existing server-side checks.
+
+See [Threat model](docs/SECURITY_MODEL.md), [Operator runbook](docs/OPERATOR_RUNBOOK.md), [Evidence](docs/EVIDENCE.md) and [Publication checklist](docs/PUBLICATION_CHECKLIST.md).
+
+
 Tesla Voice MCP can access vehicle information and, when explicitly enabled by the operator, prepare or send remote commands. Treat every deployment and credential as security-sensitive.
 
 ## Reporting vulnerabilities

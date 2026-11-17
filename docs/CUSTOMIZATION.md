@@ -1,5 +1,14 @@
 # Customization and extension guide
 
+## Customization principles
+
+Prefer configuration and supported preference tools over code forks. Customize **the operator's private instance**, not tracked examples. This project does not import a user's Tesla favorites automatically, store a universal personal tariff contract or guarantee charger data freshness.
+
+**Suggested order:** verify read-only connectivity → configure explicit energy assumptions → allow map queries with consent → save private aliases → enable optional Google Places only if necessary → review separate command permissions. No map or pricing preference is permission to operate the car.
+
+For the purpose of this guide, **customization** means changing documented inputs, provider choices or local preferences, **not** extending the Tesla Fleet API or bypassing feature gates. See [Practical workflows](WORKFLOWS.md) and [Operator runbook](OPERATOR_RUNBOOK.md).
+
+
 Every operator should customize a **private deployment**, not the tracked example data. This project is designed around one authorized subject per isolated instance; it is not a shared multi-tenant SaaS.
 
 ## 1. Start with configuration, not source-code edits

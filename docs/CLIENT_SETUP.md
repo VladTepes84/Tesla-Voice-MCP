@@ -1,5 +1,14 @@
 # Connecting an AI client to Tesla Voice MCP
 
+## Before you attempt the connection
+
+**Only connect an instance you own and have configured.** Adding an MCP URL in an AI client does not automatically create a Tesla application, Redis store, OAuth issuer or signing key. Confirm your client supports remote MCP **and** this server's OAuth security model.
+
+**Current ChatGPT integration note (reviewed 2026-11-17):** OpenAI documents custom MCP creation/connection through eligible web workspaces; full MCP support is subject to workspace permissions, while some plans have more limited read/fetch access. Adding or configuring a custom MCP connection is **web-only** in the documented workflow. Tool availability may be frozen until the supported refresh process. See [official guidance](https://help.openai.com/en/articles/12584461-connecting-custom-mcp-servers-in-chatgpt), and verify the UI and entitlements at setup time. Do not promise command execution for all users.
+
+**First test:** authenticate MCP, inspect the discovered read-only tools, run `get_connection_status`, then read `get_battery` only if linked and cached data exists. Do not begin with vehicle control.
+
+
 The server exposes a **remote, OAuth-protected MCP endpoint**. It is not a ChatGPT subscription feature, an App Store application, a standalone voice assistant or a local-only `stdio` server.
 
 ## Client compatibility requirements

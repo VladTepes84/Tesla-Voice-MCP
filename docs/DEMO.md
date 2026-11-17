@@ -1,5 +1,12 @@
 # Tesla Voice MCP — Guided product demonstration
 
+## What makes these examples valuable?
+
+Each demonstration shows **which additional logic the server contributes on top of Tesla Fleet API**: source timestamps, local calculations, external data joins, authorization decisions and the difference between prepared, accepted and verified operations.
+
+They are **static Markdown examples**, not a running interactive simulator or a recording from an actual vehicle. For a cross-cutting comparison, read [Beyond the Tesla API](WHY_MCP.md); for professional end-to-end flows, read [Practical workflows](WORKFLOWS.md).
+
+
 > **Synthetic demonstration.** Every name, address, timestamp, vehicle reading, price and response below is illustrative, not a recording of a Tesla session. This page never calls an API or a vehicle. Tool names refer to implemented MCP capabilities; actual availability depends on OAuth scopes, feature gates and provider connectivity.
 
 ## What the project does

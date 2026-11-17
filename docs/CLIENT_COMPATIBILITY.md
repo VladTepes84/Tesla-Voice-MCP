@@ -1,5 +1,18 @@
 # Using Tesla Voice MCP with AI clients
 
+## At-a-glance compatibility decision
+
+| Question | Required answer before proceeding |
+| --- | --- |
+| Does the client support **remote HTTPS MCP**? | Yes; local-only `stdio` is insufficient without a supported bridge |
+| Can it authorize this server's **MCP OAuth resource**? | Yes; Tesla OAuth credentials alone are not accepted |
+| Can the operator or workspace add a custom server? | Confirm current plan and administrative permissions |
+| Are **write-capable tools** allowed by this client? | Explicitly check; read/fetch-only modes cannot be assumed to execute vehicle commands |
+| Does the server list the intended tools and scopes? | Verify current `tools/list`, with any client-side cache refreshed appropriately |
+
+**Do not advertise generic “works with ChatGPT” as universal support.** The correct claim is **“integrates with compatible AI clients that support custom remote MCP, OAuth and the required tool permissions.”**
+
+
 > Documented against product guidance available on 2026-11-16. Client capabilities, account entitlements, and setup screens may change. This document is **not** a compatibility attestation for every client.
 
 ## What this repository provides

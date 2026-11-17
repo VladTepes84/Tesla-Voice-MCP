@@ -1,5 +1,15 @@
 # Contributing
 
+## Contribution quality bar
+
+A contribution is valuable when it improves user outcomes **without exaggerating evidence**. Every proposed change should state the actual capability, the layers touched, exact tests run, privacy and cost implications, backward compatibility of tool schemas, and what still needs a real vehicle.
+
+- Begin with [Architecture](docs/ARCHITECTURE.md), [Tool reference](docs/TOOLS_REFERENCE.md) and [Evidence](docs/EVIDENCE.md).
+- For a new assistant workflow, add a **synthetic example** to [Practical workflows](docs/WORKFLOWS.md) and document its tool, inputs, scopes and failure modes.
+- For changes affecting costs or map data, document the operator/provider terms and consent requirements.
+- Keep testing and deployment separate: source changes never imply auto-registration, live commands or release approval.
+
+
 Tesla Voice MCP is an experimental integration with vehicle data and commands. Changes affecting authorization, navigation, stored credentials or real vehicle actions must be reviewed especially carefully.
 
 ## Before proposing changes
