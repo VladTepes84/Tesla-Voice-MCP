@@ -172,7 +172,7 @@ A real deployment requires:
 
 ## Real Vehicle Testing — Developer Confirmed
 
-All 75 Tesla Voice MCP operations have been tested and confirmed functional by the developer on a real Tesla vehicle. Testing includes offline simulations and real-world online vehicle interactions. Multi-destination navigation with up to 16 destinations has also been successfully tested. The developer has used the project operationally.
+All 75 Tesla Voice MCP operations have been tested and confirmed functional by the developer on a real Tesla vehicle. Testing includes offline simulations and real-world online vehicle interactions. Multi-destination navigation with up to 16 destinations has also been successfully tested. The developer used the project operationally on a Tesla Model 3 in October 2026. See the [real vehicle test record](docs/REAL_VEHICLE_TESTING.md) for the operation list and recorded limitations.
 
 These results are confirmed by the developer and have not been independently audited. Compatibility with other Tesla models and AI clients may vary. The exact software revision, transport configuration and test conditions are not documented here.
 

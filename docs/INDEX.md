@@ -80,6 +80,8 @@ flowchart TD
 | [Contributing](../CONTRIBUTING.md) | Repository practices, tests and safe contribution requirements |
 | [Public-release checklist](PUBLICATION_CHECKLIST.md) | Mandatory release gates; no automatic approval or visibility change |
 
+The [real vehicle test record](REAL_VEHICLE_TESTING.md) lists the 75 operations covered by the developer’s statement and distinguishes historical testing from current transport availability.
+
 ## What is currently supported, and what is not?
 
 - **Tool inventory:** 38 named MCP tools in the source-backed catalog; dynamic visibility depends on scopes and feature gates.
