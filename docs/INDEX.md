@@ -38,6 +38,7 @@ flowchart TD
 | [Beyond the Tesla API](WHY_MCP.md) | Architecture value, concrete differentiators, honest comparison to direct Fleet API and custom REST development |
 | [Guided product demo](DEMO.md) | Eight synthetic use-case demonstrations with tool flow and expected results |
 | [Practical workflows](WORKFLOWS.md) | Battery, energy, charging economics, geocoding, 16-stop planning, commands and recovery |
+| **[Costs and free-tier setup](COSTS.md)** | $0 software license, Tesla's current $10 monthly developer discount, free-tier options, limitations and paid exceptions |
 | [FAQ](FAQ.md) | Plain-English answers, pricing/requirements, compatibility and limitations |
 | [Feature catalog](FEATURES.md) | Source-backed overview of supported tool families and command groups |
 
@@ -47,6 +48,7 @@ flowchart TD
 | --- | --- |
 | [Beginner's Guide](BEGINNERS_GUIDE.md) | Safe zero-to-offline-test walkthrough and staged setup checkpoints |
 | [Credential-free clean-room simulation](CLEAN_ROOM_SMOKE.md) | A local HTTP/MCP + synthetic OAuth onboarding smoke test; no Tesla, Google or paid host |
+| **[Costs and free-tier setup](COSTS.md)** | Hosting, Redis, Tesla, OAuth, Google Places and AI client cost boundaries |
 | [Complete installation](INSTALLATION.md) | Prerequisites, accounts, Vercel root, OAuth, encrypted storage, rollout and acceptance |
 | [Getting started](GETTING_STARTED.md) | Condensed operator checklist and acceptance milestones |
 | [Configuration](CONFIGURATION.md) | Environment variables, provider setup, private destinations and gates |

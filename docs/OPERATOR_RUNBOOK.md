@@ -104,6 +104,10 @@ An HTTP 2xx or `tesla_accepted` result must not be relabeled as independent phys
 
 ## Costs and provider policy
 
+For a source-backed beginner-friendly comparison of free tiers, Tesla's currently documented **$10/month discount**, billable services and cost-control steps, see [Costs & Free-Tier Setup](COSTS.md). **Low expected personal cost is not a guarantee of zero bills or permission for commercial use of free services.**
+
+
+
 - **Tesla Fleet API:** metered usage; configure billing limits in the provider account and set a local read budget. Review [official billing documentation](https://developer.tesla.com/docs/fleet-api/billing-and-limits).
 - **Hosting, Redis and OAuth:** each may have free tiers, quotas or charges that change; verify pricing directly.
 - **Google Places (New):** optional; paid/billing-enabled project may be required. Use OSM/Photon for the supported non-Google lookup path when appropriate.

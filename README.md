@@ -147,6 +147,14 @@ node --test simulator/*.test.mjs
 
 These are local/offline checks using synthetic fixtures, **not a deployment, Tesla login, live command or real-car test**. The separate Redis integration suite requires isolated test storage. Check the [Beginner's Guide](docs/BEGINNERS_GUIDE.md) for a non-technical walk-through and common failures.
 
+## Costs — free software, potentially near-zero personal running costs
+
+**The MCP software is free (MIT-licensed)**. For light personal use, you can often choose free tiers for hosting, Redis and OSM-backed maps. **Tesla Fleet API is metered**, but Tesla currently documents a **USD $10 monthly discount** for individual developers and small applications. Light usage may fall within that discount.
+
+**Not a guaranteed free service:** Google Places (New) is optional but may charge; your AI subscription, OAuth provider, paid/commercial hosting, domain and over-limit infrastructure usage may also cost money. The size of any Tesla bill depends on actual API requests, not a flat MCP subscription.
+
+**[Full cost and free-tier setup guide](docs/COSTS.md)** — components, official pricing, quotas and a low-cost installation path.
+
 ## Connect your own instance
 
 A real deployment requires:
@@ -160,7 +168,7 @@ A real deployment requires:
 
 **[Complete installation](docs/INSTALLATION.md)** · **[AI client setup](docs/CLIENT_SETUP.md)** · **[Configuration](docs/CONFIGURATION.md)** · **[Operator runbook](docs/OPERATOR_RUNBOOK.md)**
 
-**Costs:** Tesla Fleet API usage is metered. Hosting, storage, OAuth and optional external providers may charge. Configure provider billing limits and explicit request budgets. This is not a guaranteed free or zero-configuration service.
+**Costs:** no software license fee; many supporting services offer free tiers for eligible personal use. Tesla Fleet API is pay-per-use with a currently documented $10/month developer discount. Additional charges remain possible; see [Costs & Free-Tier Setup](docs/COSTS.md).
 
 ## Safety and evidence: read before using commands
 

@@ -14,6 +14,10 @@ Clear answers for first-time visitors, developers, Tesla owners and security rev
 
 **Server-side map integrations are included**, not a complete graphical map interface. OSM/Photon/Nominatim/OSRM enable supported searches and planning without Google billing. **Google Places API (New) is optional** for Place-ID resolution workflows and may incur charges. The step-by-step key/Place ID guide is [Google Places setup](GOOGLE_PLACES_SETUP.md); see also [Maps and providers](MAP_PROVIDERS.md).
 
+## Can I run Tesla Voice MCP at almost no cost?
+
+**Yes, potentially, for light personal use.** The project itself is free (MIT). A personal, non-commercial deployment can often use free hosting and Redis tiers, and its OSM-based maps do not require a paid Google API key. Tesla Fleet API is metered but Tesla currently provides a **USD $10 monthly discount** for individual developers and small applications. **This does not guarantee zero costs:** optional Google Places, paid AI plans, hosting beyond free tiers, OAuth services and other provider usage can be chargeable. See [Costs & Free-Tier Setup](COSTS.md) for details and official pricing sources.
+
 ## What exactly is Tesla Voice MCP?
 
 An **open-source, self-hosted remote Model Context Protocol server** that exposes selected Tesla Fleet API readings and commands alongside route/charging calculations, mapping tools, private preferences and guardrails to compatible AI clients.
@@ -80,7 +84,7 @@ Live command execution requires explicit gates, appropriate scopes, signed-comma
 
 ## Will I be charged by Tesla or other providers?
 
-Possibly. Tesla Fleet API is metered; hosting, Redis, OAuth providers and optional Google Places may also charge. Public map services have usage terms and rate limits. Set provider-side budgets and review [Operator runbook](OPERATOR_RUNBOOK.md).
+Possibly. The MCP software has no license fee, and Tesla currently documents a $10 monthly discount for individual developers/small applications; many supporting providers offer limited free tiers. However Tesla Fleet API remains metered, and hosting, Redis, OAuth, AI subscriptions and optional Google Places can add charges. Public maps have usage terms. See [Costs & Free-Tier Setup](COSTS.md) and [Operator runbook](OPERATOR_RUNBOOK.md).
 
 ## Can I share one deployed server with many Tesla owners?
 

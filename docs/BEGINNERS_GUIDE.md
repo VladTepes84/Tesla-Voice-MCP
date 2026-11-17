@@ -25,6 +25,14 @@ flowchart LR
 
 **Next:** [Connect your AI client](AI_CLIENTS.md) · [How voice works](VOICE_USAGE.md) · [Google Places / Place IDs](GOOGLE_PLACES_SETUP.md) · [Map providers](MAP_PROVIDERS.md).
 
+## How much will this cost?
+
+**The software itself costs $0 to download and self-host.** For light personal use, it is possible to select free tiers for hosting, Redis and OSM-based maps; **Tesla Fleet API is charged by use** but currently includes a **$10 monthly discount** for eligible individual developers and small applications.
+
+**Important:** The total is **not guaranteed to be zero**. Optional Google Places (New) may bill, a paid AI client or OAuth plan may be required, and free infrastructure tiers have limits or non-commercial restrictions.
+
+**[Read the complete costs and free-tier setup guide](COSTS.md)** before creating any billing-enabled service. You can run the offline tests and clean-room simulation with **no Tesla or Google account**.
+
 ## The easiest way to start
 
 **You do not need a Tesla, credit card or hosting account to try the project safely.** First learn what the software does, download it and run the included offline checks. A fully connected Tesla installation is a separate, advanced phase.

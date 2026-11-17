@@ -28,6 +28,12 @@ Tesla Voice MCP is **one server for multiple possible AI clients**—ChatGPT, Cl
 
 Read [AI client-specific setup](AI_CLIENTS.md) and [Voice usage](VOICE_USAGE.md). Map integration is built in at the backend level; optional Google Place IDs have a separate [configuration guide](GOOGLE_PLACES_SETUP.md). OpenStreetMap-based features do not require Google billing.
 
+## Budget before deployment
+
+**Tesla Voice MCP is free open-source code**, and a light personal instance can often use free infrastructure and public OSM-backed services. **Tesla Fleet API is metered**; its official policy currently describes a **$10/month discount** for individual developers/small applications. Google Places (New), commercial hosting, some AI/OAuth plans and over-limit usage may add charges.
+
+**Do not enable billable services without reviewing limits.** Start with [Costs & Free-Tier Setup](COSTS.md), then follow this installation guide.
+
 ## Choose an installation profile
 
 | Profile | What you can validate | Dependencies |
