@@ -12,7 +12,7 @@ const positions=names.map((_,i)=>({lat:45+i/100,lon:9+i/100}));
 
 test('16 OSM waypoints pass saved navigation handoff without vehicle dispatch',async()=>{
  const db=new Map(),store={put:async(k,v)=>db.set(k,v),get:async k=>db.get(k)??null};
- const config={issuer:'offline-fixture',key:Buffer.alloc(32,17),origin:TESLA_P256_ORIGIN,env:{
+ const config={issuer:'offline-fixture',key:Buffer.alloc(32,17),origin:TESLA_P256_ORIGIN,env:{APP_ORIGIN:TESLA_P256_ORIGIN,
   VERCEL_ENV:'production',TESLA_FLEET_REGION:'eu',TESLA_BACKEND_ENABLED:'true',TESLA_READ_ENABLED:'true',
   TESLA_COMMANDS_ENABLED:'true',TESLA_COMMAND_EXECUTION_ENABLED:'true',TESLA_REAL_RELEASE_APPROVED:'true',
   TESLA_GPS_ROUTE_CANDIDATE_ENABLED:'true',TESLA_GPS_ROUTE_ORDER_SCHEMA:GPS_ROUTE_ORDER_SCHEMA
@@ -36,7 +36,7 @@ test('MCP Google resolver prepares 16 place IDs in order without contacting Tesl
  const {privateKey,publicKey}=generateKeyPairSync('rsa',{modulusLength:2048});
  const jwk={...publicKey.export({format:'jwk'}),kid:'offline-key',use:'sig',alg:'RS256'};
  const config={origin:TESLA_P256_ORIGIN,issuer:'https://issuer.example/',audience:TESLA_P256_ORIGIN+'/mcp',
-  jwks:{keys:[jwk]},env:{VERCEL_ENV:'production',MCP_ALLOWED_SUBJECT:'offline',TESLA_FLEET_REGION:'eu',
+  jwks:{keys:[jwk]},env:{APP_ORIGIN:TESLA_P256_ORIGIN,VERCEL_ENV:'production',MCP_ALLOWED_SUBJECT:'offline',TESLA_FLEET_REGION:'eu',
   TESLA_READ_ENABLED:'true',TESLA_LOCATION_ENABLED:'true',TESLA_BACKEND_ENABLED:'true',
   TESLA_COMMANDS_ENABLED:'true',TESLA_COMMAND_EXECUTION_ENABLED:'true',TESLA_REAL_RELEASE_APPROVED:'true',
   TESLA_NATIVE_WAYPOINTS_ENABLED:'true',GOOGLE_PLACES_SEARCH_ENABLED:'true',GOOGLE_PLACES_API_KEY:'fixture-key'}};
