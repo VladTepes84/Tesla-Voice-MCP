@@ -1,4 +1,5 @@
 import { https, headers } from '../lib/security.mjs';
+import { hasRealTeslaFlags } from '../lib/runtime.mjs';
 export default {
   fetch(request) {
     try {
@@ -12,7 +13,11 @@ export default {
       // Real Tesla reads stay disabled.
       // Map-only Preview tools require location scope, but never expose commands.
       const preview = process.env.VERCEL_ENV === 'preview';
-      const scopes = preview ? ['battery:read', 'location:read'] : ['tesla:connect'];
+      // A production deployment with all real Tesla gates disabled exposes
+      // only the OAuth-protected synthetic battery tool. Advertise its scope
+      // rather than tesla:connect, so first-time OAuth onboarding can succeed.
+      const realBackendRequested = hasRealTeslaFlags(process.env);
+      const scopes = preview ? ['battery:read', 'location:read'] : realBackendRequested ? ['tesla:connect'] : ['battery:read'];
       if (!preview && process.env.TESLA_READ_ENABLED === 'true') scopes.push('battery:read');
       if (!preview && process.env.TESLA_READ_ENABLED === 'true' && process.env.TESLA_LOCATION_ENABLED === 'true') scopes.push('location:read');
       if (!preview && process.env.TESLA_READ_ENABLED === 'true' && process.env.TESLA_COMMANDS_ENABLED === 'true' && process.env.TESLA_COMMAND_EXECUTION_ENABLED === 'true') scopes.push('vehicle:control');

@@ -1,5 +1,21 @@
 # Configuration and setup
 
+## Configuration philosophy — start with least privilege
+
+The source deliberately requires multiple distinct settings because a connected vehicle is a security-sensitive system. This is **not** a “paste one API key and go” integration. Leave command and experimental-navigation gates off until the dedicated tests and authorization checks have been performed.
+
+| Configuration layer | Purpose | Failure or risk if misconfigured |
+| --- | --- | --- |
+| Origin and routing | Defines the remote MCP identity and callback host | OAuth audience/callback mismatch |
+| MCP OAuth | Authenticates the AI client, subject and tool scopes | Unauthorized or unavailable tool calls |
+| Tesla OAuth | Grants access to the operator's Tesla resources | Permission failure or linking to an unintended account |
+| Private encrypted store | Maintains authorization and private preferences | Unreadable/lost data or sensitive disclosure |
+| Read/location gates | Separates data categories and privacy | Unexpected live reads or location sharing |
+| Command/experimental gates | Protects physical action and unproven transport | Unsafe action or misleading success claims |
+
+**Deployment recipe:** [Installation](INSTALLATION.md). **Operational rollback and incident handling:** [Operator runbook](OPERATOR_RUNBOOK.md). **Required acceptance evidence:** [Evidence](EVIDENCE.md).
+
+
 This guide describes how to configure a self-hosted Tesla Voice MCP instance. Every operator must create and manage their own accounts, application registrations, infrastructure, provider credentials, and private data. The repository does not include working credentials or provide a shared hosted service.
 
 The implementation is experimental. Offline tests do not verify integration with a live Tesla account, vehicle, Google project, hosting provider, or MCP client. Review the code and third-party terms before enabling live features.
@@ -86,6 +102,10 @@ Keep live command execution disabled until authentication, storage, signing, veh
 Never use another person's client credentials, tokens, vehicle identifier, private key, OAuth subject, or private destination catalog.
 
 ## 4. Optional Google Places setup
+
+For a **beginner-to-production walkthrough** (Google Cloud account, billing, Places API (New), restricted key, `selectedPlaceId`, private Home/Work, test input/output and common errors), follow [Google Places and Place ID setup](GOOGLE_PLACES_SETUP.md). For OSM/Photon/OSRM and charging datasets, use [Map providers](MAP_PROVIDERS.md).
+
+**Guard conditions verified in source:** `GOOGLE_PLACES_SEARCH_ENABLED=true`, a real private `GOOGLE_PLACES_API_KEY`, production deployment (`VERCEL_ENV=production`), applicable native-waypoint gate and explicit `location:read`/map consent. Google and Tesla navigation dispatch have separate permission boundaries. **Do not force a local environment to pretend it is production.**
 
 1. Create your own Google Cloud project and enable Places API (New).
 2. Review Google billing, quotas, regional availability, and terms.

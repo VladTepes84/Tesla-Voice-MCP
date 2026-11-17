@@ -9,16 +9,22 @@ const point = roadTripTools.find(tool => tool.name === 'plan_road_trip').inputSc
 const place = { anyOf: [{ type: 'string', minLength: 2, maxLength: 200 }, point] };
 export const smartTripTool = {
   name: 'plan_smart_trip',
-  description: 'Plans Tesla road trips and itineraries. For a navigation-only request with 2–4 named destinations, set navigationOnly=true; when Google Places is enabled in Production, it resolves Google Place IDs first without reading GPS or battery and without sending commands. Otherwise it uses Photon/OSM with Nominatim fallback. Resolve ambiguous Google results with resolve_waypoint_places and selectedPlaceId. Home and Work require private saved aliases; Tesla favorites are not imported. Planning saves the route, while dispatch is separate and requires GPS or verified Place ID gates. Use Tesla as origin only with explicit GPS consent; retrieve state of charge and saved preferences only with the required consent. Reuses identical searches and stores requested names and result provenance in an encrypted draft. If a place is ambiguous, present one grouped choice and preserve the itinerary for 15 minutes; continue with continuationId and placeSelections or placeCorrections without asking for the other stops again. If no reliable result exists, say so without asking the user to repeat the whole trip; optional corrections change only one stop. Resolve Home only from a confirmed private account place, never from public maps. Do not reduce a multi-stop itinerary to navigation_request for one stop; if multipoint cannot be verified, return the block and preserve order. Map coordinates are OSM candidates, not Google Place IDs or user-confirmed coordinates. OSRM may receive requested motorway/toll exclusions only if supported by its profile; if rejected, do not use an unrestricted fallback route. Preferred road names are not applied and no route preference is sent to Tesla navigation. For trips with charging, reuse saved chargingMapsConsent or request explicit consent; navigation-only planning uses its own consent. Unknown prices and availability remain unknown. Trip charging uses DC/HPC CCS2 only; search for AC only when separately requested. Encrypted plans are available through get_planned_trip for 24 hours. Does not send destinations or commands.',
+  description: 'Plans Tesla road trips and itineraries. For a navigation-only request with 2–16 named destinations, set navigationOnly=true; when Google Places is enabled in Production, it resolves Google Place IDs first without reading GPS or battery and without sending commands. Otherwise it uses Photon/OSM with Nominatim fallback. Resolve ambiguous Google results with resolve_waypoint_places and selectedPlaceId. Home and Work require private saved aliases; Tesla favorites are not imported. Planning saves the route, while dispatch is separate and requires GPS or verified Place ID gates. Use Tesla as origin only with explicit GPS consent; retrieve state of charge and saved preferences only with the required consent. Reuses identical searches and stores requested names and result provenance in an encrypted draft. If a place is ambiguous, present one grouped choice and preserve the itinerary for 15 minutes; continue with continuationId and placeSelections or placeCorrections without asking for the other stops again. If no reliable result exists, say so without asking the user to repeat the whole trip; optional corrections change only one stop. Resolve Home only from a confirmed private account place, never from public maps. Do not reduce a multi-stop itinerary to navigation_request for one stop; if multipoint cannot be verified, return the block and preserve order. Map coordinates are OSM candidates, not Google Place IDs or user-confirmed coordinates. OSRM may receive requested motorway/toll exclusions only if supported by its profile; if rejected, do not use an unrestricted fallback route. Preferred road names are not applied and no route preference is sent to Tesla navigation. For trips with charging, reuse saved chargingMapsConsent or request explicit consent; navigation-only planning uses its own consent. Unknown prices and availability remain unknown. Trip charging uses DC/HPC CCS2 only; search for AC only when separately requested. Encrypted plans are available through get_planned_trip for 24 hours. Does not send destinations or commands.',
   inputSchema: { type: 'object', additionalProperties: false, required: [],
-    anyOf: [{ required: ['destination'] }, { required: ['continuationId'] }],
+    anyOf: [
+      { type: 'object', required: ['continuationId'], additionalProperties: true },
+      { type: 'object', required: ['destination','navigationOnly'], additionalProperties: true,
+        properties: { navigationOnly: { const: true }, stops: { type: 'array', items: place, maxItems: 15 } } },
+      { type: 'object', required: ['destination'], additionalProperties: true,
+        properties: { stops: { type: 'array', items: place, maxItems: 8 } } }
+    ],
     properties: {
-      destination: place, origin: place, stops: { type: 'array', items: place, maxItems: 8 },
+      destination: place, origin: place, stops: { type: 'array', items: place, maxItems: 15 },
       continuationId: { type: 'string', pattern: '^[A-Za-z0-9_-]{43}$' },
-      placeSelections: { type: 'array', maxItems: 8, items: { type: 'object', additionalProperties: false,
-        required: ['placeIndex','candidateIndex'], properties: { placeIndex: { type: 'integer', minimum: 0, maximum: 9 }, candidateIndex: { type: 'integer', minimum: 0, maximum: 9 } } } },
-      placeCorrections: { type: 'array', maxItems: 8, items: { type: 'object', additionalProperties: false,
-        required: ['placeIndex','query'], properties: { placeIndex: { type: 'integer', minimum: 0, maximum: 9 }, query: { type: 'string', minLength: 2, maxLength: 200 } } } },
+      placeSelections: { type: 'array', maxItems: 16, items: { type: 'object', additionalProperties: false,
+        required: ['placeIndex','candidateIndex'], properties: { placeIndex: { type: 'integer', minimum: 0, maximum: 15 }, candidateIndex: { type: 'integer', minimum: 0, maximum: 9 } } } },
+      placeCorrections: { type: 'array', maxItems: 16, items: { type: 'object', additionalProperties: false,
+        required: ['placeIndex','query'], properties: { placeIndex: { type: 'integer', minimum: 0, maximum: 15 }, query: { type: 'string', minLength: 2, maxLength: 200 } } } },
       roundTrip: { type: 'boolean' }, navigationOnly: { type: 'boolean' }, externalMapsConsent: { type: 'boolean', const: true },
       teslaLocationConsent: { type: 'boolean' }, teslaBatteryConsent: { type: 'boolean' },
       batteryMode: { type: 'string', enum: ['cached', 'live'] }, allowCachedFallback: { type: 'boolean' },
@@ -104,10 +110,12 @@ export async function planSmartTrip(input, { backend, subject, now = Date.now, m
   if(input.chargingRange && input.chargingRange.minimumPercent > input.chargingRange.maximumPercent)throw Error('invalid_map_arguments');
   if (input.externalMapsConsent !== true) throw Error('map_consent_required');
   const navigationOnly=input.navigationOnly===true;
+  // Energy routes retain the 8-intermediate-stop limit, before maps or Tesla calls.
+  if (!navigationOnly && (input.stops??[]).length>8) throw Error('invalid_map_arguments');
   if(navigationOnly){
     const requested=[...(input.stops??[]),input.destination];
-    if(input.origin!==undefined||input.roundTrip===true||requested.length<2||requested.length>4||requested.some(place=>typeof place!=='string'))
-      return result('invalid_navigation_route',{reason:'navigation_only_requires_2_to_4_named_destinations_in_order_and_explicit_final_stop'});
+    if(input.origin!==undefined||input.roundTrip===true||requested.length<2||requested.length>16||requested.some(place=>typeof place!=='string'))
+      return result('invalid_navigation_route',{reason:'navigation_only_requires_2_to_16_named_destinations_in_order_and_explicit_final_stop'});
   }
   const autoOrigin = !navigationOnly && input.origin === undefined, autoSoc = !navigationOnly && input.batteryPercent === undefined;
   if (!navigationOnly && autoOrigin && input.teslaLocationConsent !== true) return result('needs_location_consent');

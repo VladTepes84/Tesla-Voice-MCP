@@ -71,13 +71,13 @@ test('known distinct OSM identities do not disappear through proximity deduplica
  assert.equal(resolveDestinationCandidates('Il Gigante, Cormano',candidates).length,2);
 });
 test('verified street and house metadata survive and support a qualified address',async()=>{
- const r=await invokeRoadTrip('search_trip_destination',{query:'Via Roma 12, Cormano, Italia',externalMapsConsent:true},{fetcher:async()=>Response.json({features:[{geometry:{coordinates:[9.1,45.5]},properties:{street:'Via Roma',housenumber:'12',city:'Cormano',country:'Italy',osm_key:'building',osm_value:'yes'}}]})});
+ const r=await invokeRoadTrip('search_trip_destination',{query:'Via Scenario Fittizio 12, Cormano, Italia',externalMapsConsent:true},{fetcher:async()=>Response.json({features:[{geometry:{coordinates:[9.1,45.5]},properties:{street:'Via Scenario Fittizio',housenumber:'12',city:'Cormano',country:'Italy',osm_key:'building',osm_value:'yes'}}]})});
  assert.equal(r.candidates.length,1);assert.equal(r.candidates[0].house_number,'12');assert.equal(r.selection_required,false);
 });
 test('commercial POI and address qualifiers match all mapped fields and reject a different civic number',()=>{
- const mapped=poi('Cormano',{street:'Via Roma',house_number:'12'});
- assert.deepEqual(resolveDestinationCandidates('Il Gigante, Via Roma 12, Cormano, Italia',[mapped]),[mapped]);
- assert.deepEqual(resolveDestinationCandidates('Il Gigante, Via Roma 13, Cormano, Italia',[mapped]),[]);
+ const mapped=poi('Cormano',{street:'Via Scenario Fittizio',house_number:'12'});
+ assert.deepEqual(resolveDestinationCandidates('Il Gigante, Via Scenario Fittizio 12, Cormano, Italia',[mapped]),[mapped]);
+ assert.deepEqual(resolveDestinationCandidates('Il Gigante, Via Scenario Fittizio 13, Cormano, Italia',[mapped]),[]);
 });
 test('smart trip accepts the exact curated POI alias and preserves the unverified-address note',async()=>{
  const candidate={...poi('Exampleville',{name:'Example Sports Centre',street:'Via Example',osm_key:'leisure',osm_value:'sports_centre',osm_type:'W',osm_id:12345678}),matched_alias:'Examplecentre Exampleville',house_number_verified:false,entrance_verified:false};
