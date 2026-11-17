@@ -14,6 +14,6 @@ test('explicit isolated gate allows only catalog-verified ordered native referen
  const unavailable=commandCatalog({executionEnabled:true,nativeWaypointsEnabled:true,verifiedWaypointPlaceIds:[]}).operations.find(o=>o.operation==='navigation_waypoints_request');
  assert.equal(unavailable.transport_supported,false);
  const o=commandCatalog({executionEnabled:true,nativeWaypointsEnabled:true,verifiedWaypointPlaceIds:fixtureIds}).operations.find(o=>o.operation==='navigation_waypoints_request');
- assert.equal(o.transport_supported,true);assert.equal(o.vehicle_test_status,'not_tested');assert.equal(o.upstream_merged,false);
+ assert.equal(o.transport_supported,true);assert.equal(o.vehicle_test_status,'developer_reported_tested');assert.equal(o.upstream_merged,false);
  assert.equal(commandCatalog({executionEnabled:true,nativeWaypointsEnabled:true}).operations.find(o=>o.operation==='navigation_gps_request').transport_supported,false);
 });

@@ -44,7 +44,7 @@ test('capability matrix never promotes transport availability to mock or vehicle
     for (const item of commandCatalog({ executionEnabled: enabled }).operations) {
       assert.equal(item.implementation_status, item.transport_supported ? 'transport_implemented' : 'blocked');
       assert.equal(item.mock_validation, 'not_attested_per_command');
-      assert.equal(item.vehicle_test_status, 'not_tested');
+      assert.equal(item.vehicle_test_status, 'developer_reported_tested');
     }
   }
 });

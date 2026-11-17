@@ -56,11 +56,11 @@ No for the supported **OSM/Photon-based search and road-planning paths**, subjec
 
 ## How many tools does the project have?
 
-The source-backed documentation inventories **38 MCP tools** plus a **75-operation vehicle command catalog**. These are different counts. Not all tools/operations are enabled simultaneously; vehicle, region and firmware support vary.
+The source-backed documentation inventories **38 MCP tools** plus a **75-operation vehicle command catalog**. These are different counts. The developer confirms all 75 operations were successfully tested on their real Tesla; this has not been independently audited. Eight default SDK transports are unavailable in the pinned proxy; some navigation paths are separately gated experiments. Not all tools/operations are enabled simultaneously; vehicle, region and firmware support vary.
 
 ## Can it really plan 16 destinations?
 
-**Navigation-only planning:** software accepts and prepares 2–16 ordered destinations. **Actual Tesla navigation:** the native/GPS multipoint transport is experimental; whether all stops appear on the in-car display must be verified independently. Energy-mode planning has a separate **maximum of eight intermediate stops**. See [Workflows](WORKFLOWS.md).
+**Navigation-only planning:** software accepts and prepares 2–16 ordered destinations. **Actual Tesla navigation:** the native/GPS multipoint transport is experimental; the developer reports confirming navigation up to 16 destinations on their own Tesla, but this has not been independently verified and may differ by configuration. Energy-mode planning has a separate **maximum of eight intermediate stops**. See [Workflows](WORKFLOWS.md).
 
 ## Does “Tesla accepted” mean the car followed the command?
 
@@ -100,7 +100,7 @@ Automated CI and secret scanning are useful checks, not proof of zero risks. The
 
 ## Is everything demonstrated in the README verified on a real car?
 
-No. All demo transcripts and measurements are **synthetic**. Source implementation, offline tests, API acceptance and independently verified vehicle behavior have different evidence levels. See [Evidence](EVIDENCE.md).
+No. All demo transcripts and measurements are **synthetic**. Separately, the developer reports online testing on their own real Tesla, including navigation up to 16 destinations; this report has not been independently verified. Source implementation, offline tests, API acceptance and independently verified vehicle behavior have different evidence levels. See [Evidence](EVIDENCE.md).
 
 ## Where do I start?
 

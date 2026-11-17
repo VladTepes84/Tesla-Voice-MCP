@@ -111,6 +111,8 @@ flowchart TD
 
 Optional Google Places can resolve 2–16 named destinations with the operator's key, billing, permission and consent. OSM/Photon resolution remains available for appropriate requests.
 
+**Developer-reported test:** navigation with up to 16 destinations worked on the developer's real Tesla; the exact transport and revision are not documented and the result has not been independently audited.
+
 **Critical distinction:** the parser/planner can handle 16 ordered destinations; neither payload preparation nor Tesla API acceptance establishes that the vehicle displays the whole route. Energy-mode `plan_smart_trip` allows **at most eight intermediate stops**.
 
 **Do not:** dispatch individual stops in sequence as a silent fallback or claim that API status means 16 displayed waypoints.

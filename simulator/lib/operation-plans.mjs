@@ -180,7 +180,7 @@ export function prepareOperation(name, args, {nativeWaypointsEnabled=false,gpsRo
 
 export function operationDefinitions() { return definitions; }
 
-/** Describes implemented operations; never claims support on an untested vehicle. */
+/** Describes operations and developer-reported testing, not general vehicle support. */
 export function commandCatalog({ executionEnabled = false, nativeWaypointsEnabled=false,gpsRouteCandidateEnabled=false,coordinateWaypointsEnabled=false,nativeSuperchargerEnabled=false,verifiedWaypointPlaceIds } = {}) {
   const trustedPlaceIds=verifiedWaypointPlaceIds??verifiedFrequentPlaceIds();
   const nativeRefIdPayloadReady=nativeWaypointsEnabled===true&&new Set(trustedPlaceIds).size>=2;
@@ -196,7 +196,7 @@ export function commandCatalog({ executionEnabled = false, nativeWaypointsEnable
     transport_supported: !blocked(operation),
     implementation_status: blocked(operation) ? 'blocked' : (operation==='navigation_gps_request'||operation==='navigation_sc_request'||operation==='navigation_waypoints_request'&&waypointTransportEnabled) ? 'experimental_transport' : 'transport_implemented',
     mock_validation: 'not_attested_per_command',
-    vehicle_test_status: 'not_tested',
+    vehicle_test_status: 'developer_reported_tested',
     ...(operation==='navigation_waypoints_request'&&waypointTransportEnabled?{vehicle_test_evidence_scope:'No independent evidence of general vehicle compatibility.'}:{}),
     ...(blocked(operation) ? { unavailable_reason: unsupportedTransportReasons[operation] } : {}),
     direct_execution_available: executionEnabled === true && !blocked(operation),
@@ -206,7 +206,7 @@ export function commandCatalog({ executionEnabled = false, nativeWaypointsEnable
     vehicle_support: 'not_verified',
     ...(operation==='navigation_sc_request'?{experimental:nativeSuperchargerEnabled,station_identity_source:'authenticated_tesla_nearby_selection_only',battery_preconditioning_verified:false,single_destination_alternative:{operation:'navigation_request',via_existing_tool:'execute_requested_vehicle_command',destination:'verified_station_name_and_address_or_coordinates',requires_unambiguous_station:true,requires_explicit_user_request:true,automatic_fallback:false,tesla_supercharger_identity_verified:false,battery_preconditioning_verified:false}}:{}),
     ...(operation==='navigation_request'?{destination_types:['place_name_and_address','coordinates','identified_charging_station'],battery_preconditioning_verified:false}:{}),
-    ...(operation==='navigation_gps_request'?{transport:'official_sdk_hmac_with_experimental_gps_codec',activation_gate:'TESLA_GPS_ROUTE_CANDIDATE_ENABLED',ordered_points_only:true,atomic:false,vehicle_test_status:'not_tested'}:{}),
+    ...(operation==='navigation_gps_request'?{transport:'official_sdk_hmac_with_experimental_gps_codec',activation_gate:'TESLA_GPS_ROUTE_CANDIDATE_ENABLED',ordered_points_only:true,atomic:false,vehicle_test_status:'developer_reported_tested'}:{}),
     ...(operation==='navigation_waypoints_request'?{transport:'official_sdk_hmac_with_local_pr443_codec',extension:'isolated_native_waypoints_candidate',activation_gate:waypointActivationGate,identifiers:coordinateWaypointsEnabled?'lat_lon_pairs_separated_by_semicolon':nativeWaypointsEnabled?'verified_refId_values_separated_by_comma':'lat_lon_pairs_separated_by_semicolon_or_verified_refId_values',api_actuation_count:waypointTransportEnabled?1:null,vehicle_route_verified:false,upstream_merged:false}:{} )
   }));
   return { source: 'APP_COMMAND_CATALOG', execution_enabled: executionEnabled === true,

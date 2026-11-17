@@ -4,7 +4,7 @@
 
 Before publication, verify not only the code but also the **landing README, beginner onboarding, technical operator manual, third-party license terms and the correctness of the project's claims relative to Tesla Fleet API**. A successful automated scan is necessary but not sufficient.
 
-The current documentation deliberately labels the 16-stop planner **offline-tested** and its vehicle transport **experimental**. That distinction must survive release edits.
+The 16-stop planner has offline tests and its vehicle transport remains **experimental**. The developer separately confirms real-vehicle navigation up to 16 destinations; that declaration is not an independent audit or proof for every transport and deployment.
 
 **Evidence reference:** [Evidence](EVIDENCE.md) · [Beginner's Guide](BEGINNERS_GUIDE.md) · [Why MCP](WHY_MCP.md) · [Operator runbook](OPERATOR_RUNBOOK.md).
 
