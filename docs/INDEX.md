@@ -83,8 +83,8 @@ flowchart TD
 ## What is currently supported, and what is not?
 
 - **Tool inventory:** 38 named MCP tools in the source-backed catalog; dynamic visibility depends on scopes and feature gates.
-- **Commands:** 75 operation names in code; eight default SDK transports unavailable in the pinned proxy, with some experimental exceptions. Not a promise of 75 working features on every car.
-- **Navigation:** 2–16 ordered **navigation-only** destinations accepted by the planner; separate energy-routing mode has a maximum of eight intermediate stops. Native/GPS multipoint delivery is experimental, **not independently verified as a complete on-screen route**.
+- **Commands:** 75 operation names in code, all 75 reported successfully tested on the developer's real Tesla without independent audit; eight default SDK transports unavailable in the pinned proxy, with some experimental exceptions. Not a promise of 75 working features on every car.
+- **Navigation:** 2–16 ordered **navigation-only** destinations accepted by the planner; separate energy-routing mode has a maximum of eight intermediate stops. Native/GPS multipoint delivery is experimental; the developer reports confirming navigation up to 16 destinations on their Tesla, without independent verification.
 - **AI and voice:** provided by the **client**; this repository does not ship a standalone speech engine.
 - **Data and cost:** cached readings may be old; route/charging costs are estimates; Tesla and other providers may meter usage.
 - **Tenant model:** one authorized operator per isolated deployment; not a shared public SaaS.

@@ -55,7 +55,7 @@ for(const sc of [false,true])test(`authenticated native ${sc?'Supercharger ID':'
   assert.equal((await call(f,{operation,arguments:{site_id:'123'}})).result.error.code,'native_station_selection_required');
  }
  const catalog=(await f.rpc({}, {name:'get_vehicle_command_catalog',scope:'battery:read'})).result.operations.find(o=>o.operation===operation);
- assert.equal(catalog.transport_supported,true);assert.equal(catalog.implementation_status,'experimental_transport');assert.equal(catalog.vehicle_test_status,'not_tested');
+ assert.equal(catalog.transport_supported,true);assert.equal(catalog.implementation_status,'experimental_transport');assert.equal(catalog.vehicle_test_status,'developer_reported_tested');
  const ready=(await call(f,{operation,arguments:args})).result;assert.equal(ready.status,'invocation_ready');assert.equal(proxies,0);
  const accepted=(await call(f,ready.continuation)).result;
  assert.equal(accepted.accepted,true);assert.equal(accepted.completed,false);assert.equal(accepted.api_actuation_count,1);assert.equal(accepted.requested_destinations,sc?1:3);assert.equal(accepted.vehicle_route_verified,false);assert.equal(accepted.battery_preconditioning_verified,false);assert.equal(proxies,1);

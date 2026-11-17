@@ -63,6 +63,8 @@ Use the upstream URL appropriate to the public release when available; the place
 
 Read [SECURITY.md](../SECURITY.md), [CONFIGURATION.md](CONFIGURATION.md), [CLIENT_COMPATIBILITY.md](CLIENT_COMPATIBILITY.md) and the environment-variable template before enabling any live operation.
 
+The developer reports successful online tests on their real Tesla for all 75 operations and multipoint navigation up to 16 destinations. This has not been independently audited; validate the configuration and vehicle used for your own installation.
+
 ## 2. Run local, offline checks
 
 ```sh

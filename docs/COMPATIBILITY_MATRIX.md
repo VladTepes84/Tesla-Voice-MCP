@@ -4,6 +4,8 @@ This is a **test plan and current evidence register**, not a certification. Vend
 
 **Checked documentation:** 2026-11-17. Revalidate vendor entitlements, connection UI and protocol support whenever testing.
 
+The developer confirms successful real-Tesla tests of all 75 operations and multipoint navigation up to 16 destinations; this does not establish compatibility with every client or voice mode. Voice availability depends on the AI client, plan, available features and MCP support in that specific mode. The vehicle tests have not been independently audited.
+
 ## Evidence labels
 
 - **VENDOR-DOCUMENTED:** The vendor documents a relevant remote MCP feature.

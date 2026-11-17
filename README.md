@@ -17,7 +17,7 @@ You speak or type -> compatible AI client -> your HTTPS /mcp -> scoped tools
                                       -> Tesla Fleet API, maps, energy, preferences
 ```
 
-**Voice is NOT automatic.** A client must both support this custom MCP connector and permit tool calls during its chosen voice mode. As of this documentation review, OpenAI's general [apps FAQ](https://help.openai.com/en/articles/11487775-connectors-in-chatgpt) states that **ChatGPT Voice mode does not support apps**. xAI documents a **developer** Speech-to-Speech remote MCP path; that is not the same as universal support in a consumer Grok app.
+**Voice is NOT automatic.** The client, subscription plan and workspace must permit the custom MCP connector, and the chosen voice mode must support its tool calls. As of this documentation review, OpenAI's general [apps FAQ](https://help.openai.com/en/articles/11487775-connectors-in-chatgpt) states that **ChatGPT Voice mode does not support apps**. xAI documents a **developer** Speech-to-Speech remote MCP path; that is not the same as universal support in a consumer Grok app.
 
 **[AI client setup: ChatGPT / Claude / Gemini / Grok](docs/AI_CLIENTS.md)** · **[Voice capabilities and limits](docs/VOICE_USAGE.md)** · **[Compatibility test matrix](docs/COMPATIBILITY_MATRIX.md)**
 
@@ -65,7 +65,7 @@ Discover charging stations through OSM and selected national data sources, plan 
 <details>
 <summary><strong>4. Prepare complex destinations</strong> — private aliases and 2–16 ordered stops</summary>
 
-Resolve ambiguous names, use private confirmed Home/Work aliases and prepare **navigation-only itineraries of 2–16 ordered destinations**. This is source-supported and offline-tested. **Vehicle-side native/GPS multipoint delivery remains experimental**; Tesla API acceptance is not proof that all stops display in the car. Energy-mode planning allows at most eight intermediate stops.
+Resolve ambiguous names, use private confirmed Home/Work aliases and prepare **navigation-only itineraries of 2–16 ordered destinations**. This is source-supported and offline-tested. The developer reports confirming navigation with up to 16 destinations on their own Tesla; this has not been independently verified and its exact test conditions are not documented here. **Vehicle-side native/GPS multipoint delivery remains experimental**; Tesla API acceptance is not proof that all stops display in the car. Energy-mode planning allows at most eight intermediate stops.
 
 **Representative tools:** `search_trip_destination`, `get_saved_trip_places`, `resolve_waypoint_places`, `plan_smart_trip`, `get_planned_trip`.
 
@@ -74,7 +74,7 @@ Resolve ambiguous names, use private confirmed Home/Work aliases and prepare **n
 <details>
 <summary><strong>5. Prepare and, if authorized, execute vehicle commands</strong> — gated operations and receipts</summary>
 
-A source catalog defines **75 vehicle operation names** spanning charging, climate, access, security, navigation, vehicle/software and media. **Eight default SDK transports are unavailable** in the pinned proxy, with separately gated experiments for some navigation paths; counts are not proof of vehicle compatibility.
+The developer confirms that **all 75 vehicle operations were individually tested successfully on their real Tesla**. This is a developer declaration, not an independent audit; the exact revision and test conditions are not documented here. A source catalog defines **75 vehicle operation names** spanning charging, climate, access, security, navigation, vehicle/software and media. **Eight default SDK transports are unavailable** in the pinned proxy, with separately gated experiments for some navigation paths; counts are not proof of vehicle compatibility.
 
 Commands require appropriate Tesla authorization, MCP scopes, feature gates, explicit intent and, where applicable, virtual-key pairing. Follow the preparation/confirmation or guarded direct execution path. Do not assume a receipt proves a physical result.
 
@@ -145,7 +145,7 @@ node --test simulator/*.test.mjs
 (cd simulator && go test ./... && go build ./... && go vet ./...)
 ```
 
-These are local/offline checks using synthetic fixtures, **not a deployment, Tesla login, live command or real-car test**. The separate Redis integration suite requires isolated test storage. Check the [Beginner's Guide](docs/BEGINNERS_GUIDE.md) for a non-technical walk-through and common failures.
+These local/offline checks use synthetic fixtures and are **not themselves a deployment, Tesla login, live command or real-car test**. Separately, the developer reports online tests on their own real Tesla; dates, conditions and results have not been independently verified. The separate Redis integration suite requires isolated test storage. Check the [Beginner's Guide](docs/BEGINNERS_GUIDE.md) for a non-technical walk-through and common failures.
 
 ## Costs — free software, potentially near-zero personal running costs
 
@@ -170,11 +170,18 @@ A real deployment requires:
 
 **Costs:** no software license fee; many supporting services offer free tiers for eligible personal use. Tesla Fleet API is pay-per-use with a currently documented $10/month developer discount. Additional charges remain possible; see [Costs & Free-Tier Setup](docs/COSTS.md).
 
+## Real Vehicle Testing — Developer Confirmed
+
+All 75 Tesla Voice MCP operations have been tested and confirmed functional by the developer on a real Tesla vehicle. Testing includes offline simulations and real-world online vehicle interactions. Multi-destination navigation with up to 16 destinations has also been successfully tested. The developer has used the project operationally.
+
+These results are confirmed by the developer and have not been independently audited. Compatibility with other Tesla models and AI clients may vary. The exact software revision, transport configuration and test conditions are not documented here.
+
 ## Safety and evidence: read before using commands
 
 - **Read-only, estimated, prepared, dispatched, provider-accepted and vehicle-observed are different states.**
+- Implemented controls include JWT signature and claim checks, per-tool scopes, encrypted private state, command allowlists and execution gates; confirmation applies to the prepared-command path. These controls do not constitute an independent security audit. See [Security model](docs/SECURITY_MODEL.md).
 - No automatic wake during cached reads and no blind retry when a command outcome is unknown.
-- The 2–16 destination planner is **offline-tested**; an ordered 16-stop route visibly working on a car is **not established** by that test.
+- The 2–16 destination planner is **offline-tested**; the developer separately reports confirming navigation up to 16 destinations on their car. The offline test does not establish that live outcome, and the developer's report has not been independently verified.
 - An ordinary charger address is **not** a Tesla-native Supercharger selection and does not guarantee battery preconditioning.
 - Locations can leave the deployment through consented map searches. Self-hosting does not prevent data processing by Tesla, the AI client or other selected providers.
 - Never publish personal identifiers, VINs, exact GPS traces, private addresses, tokens, credential material or contract-specific tariffs.
@@ -183,6 +190,6 @@ A real deployment requires:
 
 ## Project maturity and contribution
 
-**Implemented source:** the reference tool catalog, calculations, provider adapters and guarded command paths. **Offline tests:** separate Node, Go, isolated Redis and secret-scan workflows. **Deployment and real-world outcomes:** must be validated independently for each installation.
+**Implemented source:** the reference tool catalog, calculations, provider adapters and guarded command paths. **Offline tests:** separate Node, Go, isolated Redis and secret-scan workflows. **Developer-reported live tests:** performed online on the developer's Tesla, without an independent test record here. **Deployment and real-world outcomes:** must be validated for each installation.
 
 This repository contains source code, not an operational hosted tenant or official product support. Third-party data terms remain separate from the project's [MIT License](LICENSE); review attribution and commercial restrictions before reuse. See [Contributing](CONTRIBUTING.md) and the [public-release checklist](docs/PUBLICATION_CHECKLIST.md).

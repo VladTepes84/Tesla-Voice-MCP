@@ -1,6 +1,6 @@
 # Voice and Tesla Voice MCP — what works, what depends on the AI client
 
-**Tesla Voice MCP provides tools, not a microphone or speech engine.** You can interact in natural language through compatible AI applications. **Voice is possible only when that specific client/mode can both process speech and invoke connected MCP tools.** Voice support must be validated separately from text-tool compatibility.
+**Tesla Voice MCP provides tools, not a microphone or speech engine.** You can interact in natural language through compatible AI applications. **Voice is possible only when the client, plan and workspace permit the feature and that specific mode can both process speech and invoke connected MCP tools.** Voice support must be validated separately from text-tool compatibility.
 
 ## How voice can reach the vehicle
 

@@ -2,14 +2,14 @@
 
 ## What this catalog represents
 
-The implementation exposes **38 named MCP tools** across the five major reference groups, plus **75 operation names** in the separate Tesla command catalog. Not all MCP tools appear simultaneously: runtime feature gates and OAuth scopes control discovery and invocation. The command count is a **code inventory**, not a count of tested physical features.
+The implementation exposes **38 named MCP tools** across the five major reference groups, plus **75 operation names** in the separate Tesla command catalog. Not all MCP tools appear simultaneously: runtime feature gates and OAuth scopes control discovery and invocation. The count is a **code inventory**; separately, the developer confirms all 75 operations were successfully tested on their real Tesla, without an independent audit or documented exact revision.
 
 | Added layer | Why it matters to a user | Source / evidence |
 | --- | --- | --- |
 | Assistant-facing tool interface | Natural-language requests can invoke typed, discoverable MCP tools | `simulator/lib/real-mcp.mjs`; compatible client required |
 | Context and provenance | Cached/live distinctions, timestamps and app-collected samples | Tesla/store modules; no continuous polling guarantee |
 | Trip and charging logic | Reserve calculations, mapped stations, CCS2 corridors and tariff comparisons | Road-trip/charging/energy modules; estimated outcomes |
-| Multi-destination preparation | Explicit ordering and ambiguity handling for 2–16 navigation-only stops | Smart-trip and waypoint modules; in-car completion unverified |
+| Multi-destination preparation | Explicit ordering and ambiguity handling for 2–16 navigation-only stops | Smart-trip and waypoint modules; developer reports real-car navigation up to 16 destinations, independently unverified |
 | Command lifecycle and policy | Scoped, allowlisted, gated writes with receipts | Command and security modules; physical result separately verified |
 
 The project does **not** add privileged Tesla vehicle capabilities or guarantee that an AI client supports every operation. See [Why MCP](WHY_MCP.md), [Workflows](WORKFLOWS.md) and [Evidence](EVIDENCE.md).
@@ -103,7 +103,7 @@ The MCP access token is **not** the Tesla access token. A user must never paste 
 
 ## 5. Remote Tesla commands
 
-The source declares **75 operation names** in the command catalog. In the baseline default catalog, **eight SDK transports are unavailable**, leaving **67 software transport paths** that may become available when execution gates are on. These numbers describe the **code catalog**, not 67 physically tested features or commands available for every vehicle.
+The source declares **75 operation names** in the command catalog. In the baseline default catalog, **eight SDK transports are unavailable**, leaving **67 software transport paths** that may become available when execution gates are on. These numbers describe the **current code catalog** and default transports. Separately, the developer confirms successful real-vehicle tests of all 75 operations; the tested revision and configuration are not documented, and availability is not guaranteed for every vehicle.
 
 ### Execution tools
 
@@ -157,6 +157,6 @@ The catalog exposes parameter schemas and per-operation required Tesla scopes; v
 - No published end-to-end latency SLA, financial-savings benchmark, universal hardware list or live multipoint success rate is supported by this repository.
 - Tesla Fleet API is usage-metered. A successful local calculation generally does not require a Tesla API call, while on-demand live reads, commands and some setup checks may consume quota.
 - Redis, OAuth, hosting, Google Places and public-map usage may add direct costs or usage-policy restrictions.
-- Tests use controlled fixtures. **Only a real deployment with an authorized car and independent result checks can validate live behavior.**
+- Automated offline tests use controlled fixtures. The developer separately reports online testing on their real Tesla; all 75 operations are reported as tested successfully, without an independently audited record or documented exact revision. Each deployment requires its own live validation.
 
 Related documents: [Installation](GETTING_STARTED.md) · [Client support](CLIENT_COMPATIBILITY.md) · [Architecture](ARCHITECTURE.md) · [Release checklist](PUBLICATION_CHECKLIST.md).

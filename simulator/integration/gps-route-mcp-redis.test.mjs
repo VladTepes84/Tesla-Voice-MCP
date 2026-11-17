@@ -147,7 +147,7 @@ test('real candidate activation uses existing MCP tool and fetch path, remains p
  }})},overrides);
  const key='tokens:'+hash(f.config.issuer+'\nowner');await f.store.put(key,seal({access:'fixture-access',refresh:'fixture-refresh',expires:Date.now()+3600000,refreshExpires:Date.now()+86400000,scopes:['vehicle_cmds']},f.config.key,key),86400);await f.backend.prepareVehicleCommandSetup('owner');
  const catalog=(await f.rpc({}, {name:'get_vehicle_command_catalog',scope:'battery:read'})).result.operations.find(o=>o.operation===operation);
- assert.equal(catalog.transport_supported,true);assert.equal(catalog.implementation_status,'experimental_transport');assert.equal(catalog.vehicle_test_status,'not_tested');assert.deepEqual(catalog.allowed_arguments,['points']);assert.equal(catalog.atomic,false);
+ assert.equal(catalog.transport_supported,true);assert.equal(catalog.implementation_status,'experimental_transport');assert.equal(catalog.vehicle_test_status,'developer_reported_tested');assert.deepEqual(catalog.allowed_arguments,['points']);assert.equal(catalog.atomic,false);
  const ready=(await call(f,{operation,arguments:args})).result;assert.equal(ready.status,'invocation_ready');assert.equal(proxyCalls,0);
  const accepted=(await call(f,ready.continuation)).result;assert.equal(accepted.accepted,true);assert.equal(accepted.completed,false);assert.equal(accepted.coordinate_route.accepted_stops,3);assert.equal(accepted.coordinate_route.vehicle_route_verified,false);assert.equal(proxyCalls,1);
  assert.equal((await call(f,ready.continuation)).result.result_reused,true);assert.equal(proxyCalls,1);
