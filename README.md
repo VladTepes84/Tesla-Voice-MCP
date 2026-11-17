@@ -6,7 +6,7 @@ Tesla Voice MCP is an experimental, open-source, **self-hosted Model Context Pro
 
 > **Important:** This repository is source code, not a hosted Tesla service or a one-click ChatGPT plugin. Each user must deploy their own server and configure Tesla Fleet API, OAuth, secure storage, and a compatible MCP client. No vehicle, client plan, firmware, or model is guaranteed to support every feature. This is an independent community project and is **not affiliated with or endorsed by Tesla or OpenAI**.
 
-**[Documentation hub](docs/INDEX.md)** · **[Guided demo](docs/DEMO.md)** · **[All MCP tools](docs/TOOLS_REFERENCE.md)** · **[Full installation](docs/INSTALLATION.md)** · **[Client setup](docs/CLIENT_SETUP.md)** · **[Customization](docs/CUSTOMIZATION.md)** · **[Security model](docs/SECURITY_MODEL.md)** · **[Troubleshooting](docs/TROUBLESHOOTING.md)**
+**[Start here — Beginner's guide](docs/BEGINNERS_GUIDE.md)** · **[Documentation hub](docs/INDEX.md)** · **[Guided demo](docs/DEMO.md)** · **[All MCP tools](docs/TOOLS_REFERENCE.md)** · **[Full installation](docs/INSTALLATION.md)** · **[Client setup](docs/CLIENT_SETUP.md)** · **[Customization](docs/CUSTOMIZATION.md)** · **[Security model](docs/SECURITY_MODEL.md)** · **[Troubleshooting](docs/TROUBLESHOOTING.md)**
 
 ## Why use Tesla Voice MCP?
 

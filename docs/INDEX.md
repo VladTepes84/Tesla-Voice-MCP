@@ -6,6 +6,7 @@
 
 | You want to... | Start here | Then read |
 | --- | --- | --- |
+| **First time here?** | **[Beginner's guide — start from zero](BEGINNERS_GUIDE.md)** | [Guided demonstration](DEMO.md) |
 | Understand the project's capabilities | [Guided demonstration](DEMO.md) | [Feature catalog](FEATURES.md) |
 | Review every MCP tool and vehicle command group | [Complete tool reference](TOOLS_REFERENCE.md) | [Live catalog behavior](FEATURES.md#5-remote-tesla-commands) |
 | Install without controlling a real car | [Installation: Profile A](INSTALLATION.md#choose-an-installation-profile) | [Getting started](GETTING_STARTED.md) |
