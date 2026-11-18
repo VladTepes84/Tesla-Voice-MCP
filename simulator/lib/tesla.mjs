@@ -1121,6 +1121,46 @@ export function createTeslaBackend({ config: c, store, fetcher = fetch, now = Da
     if(nativeSuperchargerEnabled){try{result.native_selection_cache={ready:(await nativeSelections.remember(subject,result.sites))>0};}catch{result.native_selection_cache={ready:false,reason:'selection_storage_unavailable'};}}
     return result;
   }
+  async function serviceHistory(subject, { page = 1, perPage = 20 } = {}) {
+    if (!Number.isSafeInteger(page) || page < 1 || page > 100 ||
+        !Number.isSafeInteger(perPage) || perPage < 1 || perPage > 50) throw Error('invalid_arguments');
+    const { vin, access } = await prepareVehicleRead(subject, 'vehicle_device_data');
+    await reserveTeslaRequest();
+    const url = new URL(`${c.fleet}/api/1/vehicles/${vin}/service_history`);
+    url.searchParams.set('page', String(page));
+    url.searchParams.set('per_page', String(perPage));
+    const data = await jsonFetch(observeReadStatus('service_history'), url.href, {
+      headers: { authorization: `Bearer ${access}`, 'content-type': 'application/json', accept: 'application/json' }
+    });
+    const result = data?.response;
+    if (!result || !Array.isArray(result.service_visits)) throw Error('upstream');
+    return { visits: result.service_visits.map(visit => ({
+      service_visit_id: visit.service_visit_id,
+      completed_at: visit.completed_at,
+      status: visit.status,
+      visit_type: visit.visit_type
+    })), pagination: result.pagination ?? null, source: 'tesla_fleet_api', no_vehicle_wake: true };
+  }
+  async function serviceVisitDetails(subject, serviceVisitId) {
+    if (typeof serviceVisitId !== 'string' || !/^[A-Za-z0-9_-]{1,128}$/.test(serviceVisitId))
+      throw Error('invalid_arguments');
+    const { vin, access } = await prepareVehicleRead(subject, 'vehicle_device_data');
+    await reserveTeslaRequest();
+    const url = `${c.fleet}/api/1/vehicles/${vin}/service_history/${encodeURIComponent(serviceVisitId)}`;
+    const data = await jsonFetch(observeReadStatus('service_visit_details'), url, {
+      headers: { authorization: `Bearer ${access}`, 'content-type': 'application/json', accept: 'application/json' }
+    });
+    const visit = data?.response;
+    if (!visit || typeof visit !== 'object' || Array.isArray(visit)) throw Error('upstream');
+    return {
+      service_visit_id: visit.service_visit_id, completed_at: visit.completed_at,
+      status: visit.status, visit_type: visit.visit_type,
+      work_items: Array.isArray(visit.work_items) ? visit.work_items.map(item => ({
+        correction_code: item.correction_code, description: item.description, pay_type: item.pay_type
+      })) : [],
+      cost: visit.cost ?? null, source: 'tesla_fleet_api', no_vehicle_wake: true
+    };
+  }
   async function chargingHistory(subject, days = 30) {
     if (!Number.isInteger(days) || days < 1 || days > 31) throw Error('invalid_arguments');
     const { vin, access } = await prepareVehicleRead(subject, 'vehicle_charging_cmds');
@@ -1438,6 +1478,6 @@ export function createTeslaBackend({ config: c, store, fetcher = fetch, now = Da
     try { return await operation(); }
     finally { await lock.release().catch(() => {}); }
   }
-  return { preferences, savedTripPlaces:privatePlaces, tripPlans, destinationCache, acquirePublicGeocoderLease, withTripReadLease, start, launch, partnerRegistration, partnerKeyCheck, prepareConnect, connectionStatus, prepareVehicleCommandSetup, callback, battery, vehicleConnectivity, vehicleReadingHistory, vehicleSchedules, location, nearbyChargingSites, chargingHistory, prepareCommand, confirmCommand, executeRequestedCommand, executeGPSNavigationDiagnosticReplace, executeGPSNavigationDiagnosticAppend, vehicleCommandStatus };
+  return { preferences, savedTripPlaces:privatePlaces, tripPlans, destinationCache, acquirePublicGeocoderLease, withTripReadLease, start, launch, partnerRegistration, partnerKeyCheck, prepareConnect, connectionStatus, prepareVehicleCommandSetup, callback, battery, vehicleConnectivity, vehicleReadingHistory, vehicleSchedules, location, nearbyChargingSites, chargingHistory, serviceHistory, serviceVisitDetails, prepareCommand, confirmCommand, executeRequestedCommand, executeGPSNavigationDiagnosticReplace, executeGPSNavigationDiagnosticAppend, vehicleCommandStatus };
 }
 
