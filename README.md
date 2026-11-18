@@ -188,6 +188,10 @@ These results are confirmed by the developer and have not been independently aud
 
 **[Evidence and limits](docs/EVIDENCE.md)** · **[Security model](docs/SECURITY_MODEL.md)** · **[Security policy](SECURITY.md)**
 
+## Support this project
+
+Tesla Voice MCP is free and open source. If you find it useful and want to support ongoing maintenance, documentation and development, you can [sponsor the maintainer on GitHub](https://github.com/sponsors/VladTepes84). Sponsorship is optional and does not grant access to additional vehicle capabilities or a hosted service.
+
 ## Project maturity and contribution
 
 **Implemented source:** the reference tool catalog, calculations, provider adapters and guarded command paths. **Offline tests:** separate Node, Go, isolated Redis and secret-scan workflows. **Developer-reported live tests:** performed online on the developer's Tesla, without an independent test record here. **Deployment and real-world outcomes:** must be validated for each installation.
