@@ -41,6 +41,7 @@ flowchart TD
 | **[Costs and free-tier setup](COSTS.md)** | $0 software license, Tesla's current $10 monthly developer discount, free-tier options, limitations and paid exceptions |
 | [FAQ](FAQ.md) | Plain-English answers, pricing/requirements, compatibility and limitations |
 | [Feature catalog](FEATURES.md) | Source-backed overview of supported tool families and command groups |
+| **[Changelog and complete API/command inventory](../CHANGELOG.md)** | Dated public releases, API routes, 40 MCP tool descriptions and all 75 vehicle operations |
 
 ### Install and personalize
 
@@ -71,7 +72,7 @@ flowchart TD
 
 | Document | Contents |
 | --- | --- |
-| [Complete tool reference](TOOLS_REFERENCE.md) | 38 MCP tools, scopes, 75 command catalog, status/error semantics |
+| [Complete tool reference](TOOLS_REFERENCE.md) | 40 MCP tools, scopes, 75 command catalog, status/error semantics |
 | [Architecture](ARCHITECTURE.md) | Modules, trust boundaries, API/data sources, licensing and provenance |
 | [Security model](SECURITY_MODEL.md) | Threats, token isolation, user intent, vehicle-command lifecycle and incident constraints |
 | [Operator runbook](OPERATOR_RUNBOOK.md) | Preflight, private deployment, monitoring, recovery, provider costs and go/no-go |
@@ -84,7 +85,7 @@ The [real vehicle test record](REAL_VEHICLE_TESTING.md) lists the 75 operations 
 
 ## What is currently supported, and what is not?
 
-- **Tool inventory:** 38 named MCP tools in the source-backed catalog; dynamic visibility depends on scopes and feature gates.
+- **Tool inventory:** 40 named MCP tools in the source-backed catalog; dynamic visibility depends on scopes and feature gates.
 - **Commands:** 75 operation names in code, all 75 reported successfully tested on the developer's real Tesla without independent audit; eight default SDK transports unavailable in the pinned proxy, with some experimental exceptions. Not a promise of 75 working features on every car.
 - **Navigation:** 2–16 ordered **navigation-only** destinations accepted by the planner; separate energy-routing mode has a maximum of eight intermediate stops. Native/GPS multipoint delivery is experimental; the developer reports confirming navigation up to 16 destinations on their Tesla, without independent verification.
 - **AI and voice:** provided by the **client**; this repository does not ship a standalone speech engine.
