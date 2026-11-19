@@ -18,12 +18,12 @@ The **same tool names and schemas** are exposed to any suitably authorized AI cl
 | See potential vehicle actions | `get_vehicle_command_catalog` | Catalog visibility is not authorization to execute |
 | Inspect a previous command | `get_vehicle_command_status` | Journal receipt; no blind repeat |
 
-**Two different counts:** **38 MCP tools** are callable interface entry points; **75 operation names** are command definitions processed through specific command tools. The 75 operations are not 75 separate MCP servers, independent chat skills or guaranteed in-car functions. See [Why MCP](WHY_MCP.md) and [Evidence](EVIDENCE.md).
+**Two different counts:** **40 MCP tools** are callable interface entry points; **75 operation names** are command definitions processed through specific command tools. The 75 operations are not 75 separate MCP servers, independent chat skills or guaranteed in-car functions. See [Why MCP](WHY_MCP.md) and [Evidence](EVIDENCE.md).
 
 
 **Source of truth:** `simulator/lib/real-mcp.mjs`, its imported tool modules, `simulator/lib/mcp-tool-auth.mjs`, `simulator/lib/operation-plans.mjs` and [FEATURES.md](FEATURES.md). The catalog is **conditional**: a tool can be absent or denied because of deployment flags, scopes or missing provider setup. A tool definition does not guarantee an operational Tesla command.
 
-This document inventories **38 named MCP tools** from the source-backed feature catalog, plus the separate **75-operation vehicle command catalog**. Do not confuse 38 MCP entry points with 75 command operations.
+This document inventories **40 named MCP tools** from the source-backed feature catalog, plus the separate **75-operation vehicle command catalog**. Do not confuse 40 MCP entry points with 75 command operations.
 
 ## Source-verified input examples
 
@@ -111,7 +111,7 @@ The MCP scopes enforced in `mcp-tool-auth.mjs` are `tesla:connect`, `battery:rea
 
 **Example prompts:** “Is the connection ready without waking the car?” “List permitted commands without executing any.”
 
-## 3. Vehicle readings, charging and connectivity (8)
+## 3. Vehicle readings, charging, service and connectivity (10)
 
 | Tool | Scope | Effect | Important qualification |
 | --- | --- | --- | --- |
@@ -122,6 +122,8 @@ The MCP scopes enforced in `mcp-tool-auth.mjs` are `tesla:connect`, `battery:rea
 | `get_vehicle_connectivity` | `battery:read` | Live | Online/asleep/offline as reported; no implicit wake |
 | `get_vehicle_mobile_access` | `battery:read` | Live | Reads mobile-access state; does not modify it |
 | `get_charging_history` | `battery:read` | Live/history | Recent returned sessions; not a universal invoice |
+| `get_service_history` | `battery:read` | Tesla Service/history | Completed visits for the current owner; `per_page` 1–50, follow `pagination.next` until `null`; deduplicate repeated visit IDs across pages; no vehicle wake |
+| `get_service_visit_details` | `battery:read` | Tesla Service/history | On-demand work items, payment type and final-invoice totals when available; non-invoiced/warranty visits can have no costs; no vehicle wake |
 | `get_vehicle_schedules` | `battery:read` | Live | Reads charge/preconditioning schedules; does not edit them |
 
 **Example prompts:** “Read the last cached battery sample.” “Explicitly refresh vehicle status once.” “Show my application's recorded readings.”
