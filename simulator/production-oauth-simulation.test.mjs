@@ -135,7 +135,7 @@ test('production read route requires OAuth and exposes only the real read-only t
     assert.equal(discovered.status,200);
     const list = await endpoint.fetch(rpc('tools/list',{},signed));
     assert.equal(list.status,200);
-    assert.deepEqual((await list.json()).result.tools.map(x=>x.name),['connect_tesla','prepare_vehicle_command_setup','get_connection_status','get_vehicle_command_catalog','get_vehicle_connectivity','get_vehicle_mobile_access','get_battery','get_vehicle_status','get_live_vehicle_data','get_vehicle_reading_history','get_charging_history','get_vehicle_schedules','estimate_trip_energy','compare_charging_costs','plan_trip','get_free_to_x_card_tariffs','get_charging_preferences','set_charging_preferences']);
+    assert.deepEqual((await list.json()).result.tools.map(x=>x.name),['connect_tesla','prepare_vehicle_command_setup','get_connection_status','get_vehicle_command_catalog','get_vehicle_connectivity','get_vehicle_mobile_access','get_battery','get_vehicle_status','get_live_vehicle_data','get_vehicle_reading_history','get_charging_history','get_service_history','get_service_visit_details','get_vehicle_schedules','estimate_trip_energy','compare_charging_costs','plan_trip','get_free_to_x_card_tariffs','get_charging_preferences','set_charging_preferences']);
     const catalogResponse = await endpoint.fetch(rpc('tools/call', {name:'get_vehicle_command_catalog',arguments:{}},token({scope:'battery:read'})));
     assert.equal(catalogResponse.status,200);
     const catalogRpc = await catalogResponse.json();
@@ -223,7 +223,7 @@ test('Production exposes real read-only MCP tools only with valid backend config
   try {
     const response = await endpoint.fetch(rpc('tools/list',{},token()));
     assert.equal(response.status,200);
-    assert.deepEqual((await response.json()).result.tools.map(x=>x.name),['connect_tesla','prepare_vehicle_command_setup','get_connection_status','get_vehicle_command_catalog','get_vehicle_connectivity','get_vehicle_mobile_access','get_battery','get_vehicle_status','get_live_vehicle_data','get_vehicle_reading_history','get_charging_history','get_vehicle_schedules','estimate_trip_energy','compare_charging_costs','plan_trip','get_free_to_x_card_tariffs','get_charging_preferences','set_charging_preferences']);
+    assert.deepEqual((await response.json()).result.tools.map(x=>x.name),['connect_tesla','prepare_vehicle_command_setup','get_connection_status','get_vehicle_command_catalog','get_vehicle_connectivity','get_vehicle_mobile_access','get_battery','get_vehicle_status','get_live_vehicle_data','get_vehicle_reading_history','get_charging_history','get_service_history','get_service_visit_details','get_vehicle_schedules','estimate_trip_energy','compare_charging_costs','plan_trip','get_free_to_x_card_tariffs','get_charging_preferences','set_charging_preferences']);
     assert.equal(outbound,0);
   } finally {
     for (const key of Object.keys(process.env)) if (!(key in original)) delete process.env[key];
