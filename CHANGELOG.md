@@ -252,6 +252,8 @@ All operations below originate in [`simulator/lib/operation-plans.mjs`](simulato
 
 </details>
 
+**Code sources of truth:** [`real-mcp.mjs`](simulator/lib/real-mcp.mjs) (MCP discovery/dispatch), [`tesla.mjs`](simulator/lib/tesla.mjs) (Fleet API reads), [`operation-plans.mjs`](simulator/lib/operation-plans.mjs) (75 command definitions and transport gates). These are maintained independently by each installer in their own deployment.
+
 ## Evidence and release maintenance
 
 - Source-present, offline-tested, developer-reported real-vehicle tested, Tesla API accepted and independently vehicle-observed are **different evidence levels**.
