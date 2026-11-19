@@ -1121,6 +1121,63 @@ export function createTeslaBackend({ config: c, store, fetcher = fetch, now = Da
     if(nativeSuperchargerEnabled){try{result.native_selection_cache={ready:(await nativeSelections.remember(subject,result.sites))>0};}catch{result.native_selection_cache={ready:false,reason:'selection_storage_unavailable'};}}
     return result;
   }
+  // Tesla returns completed service visits for the current owner, newest first.
+  // Page boundaries can overlap: deduplicate each page by service_visit_id.
+  async function serviceHistory(subject, { page = 1, perPage = 20 } = {}) {
+    if (!Number.isSafeInteger(page) || page < 1 || page > 1000 ||
+        !Number.isSafeInteger(perPage) || perPage < 1 || perPage > 50) throw Error('invalid_arguments');
+    const { vin, access } = await prepareVehicleRead(subject, 'vehicle_device_data');
+    await reserveTeslaRequest();
+    const url = new URL(`${c.fleet}/api/1/vehicles/${vin}/service_history`);
+    url.searchParams.set('page', String(page));
+    url.searchParams.set('per_page', String(perPage));
+    const data = await jsonFetch(observeReadStatus('service_history'), url.href, {
+      headers: { authorization: `Bearer ${access}`, 'content-type': 'application/json', accept: 'application/json' }
+    }, { 403: 'service_history_not_available', 503: 'service_history_temporarily_unavailable' });
+    const response = data?.response;
+    if (!response || !Array.isArray(response.service_visits) || response.service_visits.length > perPage ||
+        !response.pagination || !Object.hasOwn(response.pagination, 'next')) throw Error('upstream');
+    const next = response.pagination.next;
+    if (next !== null && (!Number.isSafeInteger(next) || next < 1 || next > 1000)) throw Error('upstream');
+    const visits = [], seen = new Set();
+    for (const item of response.service_visits) {
+      if (!item || typeof item !== 'object' || typeof item.service_visit_id !== 'string' ||
+          !/^[A-Za-z0-9_-]{1,128}$/.test(item.service_visit_id)) throw Error('upstream');
+      if (seen.has(item.service_visit_id)) continue;
+      seen.add(item.service_visit_id);
+      visits.push({ service_visit_id: item.service_visit_id, completed_at: item.completed_at ?? null,
+        status: item.status ?? null, visit_type: item.visit_type ?? null });
+    }
+    return { visits, pagination: { next }, source: 'tesla_fleet_api', no_vehicle_wake: true };
+  }
+  async function serviceVisitDetails(subject, serviceVisitId) {
+    if (typeof serviceVisitId !== 'string' || !/^[A-Za-z0-9_-]{1,128}$/.test(serviceVisitId))
+      throw Error('invalid_arguments');
+    const { vin, access } = await prepareVehicleRead(subject, 'vehicle_device_data');
+    await reserveTeslaRequest();
+    const url = `${c.fleet}/api/1/vehicles/${vin}/service_history/${encodeURIComponent(serviceVisitId)}`;
+    const data = await jsonFetch(observeReadStatus('service_visit_details'), url, {
+      headers: { authorization: `Bearer ${access}`, 'content-type': 'application/json', accept: 'application/json' }
+    }, { 403: 'service_history_not_available', 404: 'service_visit_not_found', 503: 'service_history_temporarily_unavailable' });
+    const visit = data?.response;
+    if (!visit || typeof visit !== 'object' || Array.isArray(visit) ||
+        visit.service_visit_id !== serviceVisitId ||
+        !Array.isArray(visit.work_items) || !(visit.cost === null || (visit.cost && typeof visit.cost === 'object' && !Array.isArray(visit.cost))))
+      throw Error('upstream');
+    const workItems = visit.work_items.map(item => {
+      if (!item || typeof item !== 'object') throw Error('upstream');
+      return { correction_code: item.correction_code ?? null,
+        description: item.description ?? null, pay_type: item.pay_type ?? null };
+    });
+    const cost = visit.cost === null ? null : Object.fromEntries(
+      ['currency','subtotal','tax','total','paid','due']
+        .filter(key => Object.hasOwn(visit.cost, key))
+        .map(key => [key, visit.cost[key]])
+    );
+    return { service_visit_id: serviceVisitId, completed_at: visit.completed_at ?? null,
+      status: visit.status ?? null, visit_type: visit.visit_type ?? null,
+      work_items: workItems, cost, source: 'tesla_fleet_api', no_vehicle_wake: true };
+  }
   async function chargingHistory(subject, days = 30) {
     if (!Number.isInteger(days) || days < 1 || days > 31) throw Error('invalid_arguments');
     const { vin, access } = await prepareVehicleRead(subject, 'vehicle_charging_cmds');
@@ -1438,6 +1495,6 @@ export function createTeslaBackend({ config: c, store, fetcher = fetch, now = Da
     try { return await operation(); }
     finally { await lock.release().catch(() => {}); }
   }
-  return { preferences, savedTripPlaces:privatePlaces, tripPlans, destinationCache, acquirePublicGeocoderLease, withTripReadLease, start, launch, partnerRegistration, partnerKeyCheck, prepareConnect, connectionStatus, prepareVehicleCommandSetup, callback, battery, vehicleConnectivity, vehicleReadingHistory, vehicleSchedules, location, nearbyChargingSites, chargingHistory, prepareCommand, confirmCommand, executeRequestedCommand, executeGPSNavigationDiagnosticReplace, executeGPSNavigationDiagnosticAppend, vehicleCommandStatus };
+  return { preferences, savedTripPlaces:privatePlaces, tripPlans, destinationCache, acquirePublicGeocoderLease, withTripReadLease, start, launch, partnerRegistration, partnerKeyCheck, prepareConnect, connectionStatus, prepareVehicleCommandSetup, callback, battery, vehicleConnectivity, vehicleReadingHistory, vehicleSchedules, location, nearbyChargingSites, chargingHistory, serviceHistory, serviceVisitDetails, prepareCommand, confirmCommand, executeRequestedCommand, executeGPSNavigationDiagnosticReplace, executeGPSNavigationDiagnosticAppend, vehicleCommandStatus };
 }
 

@@ -105,6 +105,24 @@ const vehicleReadingHistoryTool = {
   annotations: { readOnlyHint: true, destructiveHint: false, openWorldHint: false },
   securitySchemes: [{ type: 'oauth2', scopes: ['battery:read'] }]
 };
+const serviceHistoryTool = {
+  name: 'get_service_history',
+  description: 'Reads one page of Tesla service history on request, without vehicle commands or wake_up. Uses Tesla Fleet API quota.',
+  inputSchema: { type: 'object', properties: { page: { type: 'integer', minimum: 1, maximum: 1000 }, per_page: { type: 'integer', minimum: 1, maximum: 50 } }, additionalProperties: false },
+  annotations: { readOnlyHint: true, destructiveHint: false, openWorldHint: true },
+  securitySchemes: [{ type: 'oauth2', scopes: ['battery:read'] }]
+};
+function checkedServiceVisitId(value) {
+  if (typeof value !== 'string' || !/^[A-Za-z0-9_-]{1,128}$/.test(value)) throw Error('invalid_arguments');
+  return value;
+}
+const serviceVisitDetailsTool = {
+  name: 'get_service_visit_details',
+  description: 'Reads work items and invoice totals for a single Tesla service visit. No commands or wake_up; uses Fleet API quota.',
+  inputSchema: { type: 'object', properties: { service_visit_id: { type: 'string', pattern: '^[A-Za-z0-9_-]{1,128}$' } }, required: ['service_visit_id'], additionalProperties: false },
+  annotations: { readOnlyHint: true, destructiveHint: false, openWorldHint: true },
+  securitySchemes: [{ type: 'oauth2', scopes: ['battery:read'] }]
+};
 const chargingHistoryTool = {
   name: 'get_charging_history', description: 'Requests Tesla charging sessions for up to the last 31 days, including available locations, times, and amounts. This is historical data, not live vehicle status; VINs and invoices are not returned.',
   inputSchema: { type: 'object', properties: { days: { type: 'integer', minimum: 1, maximum: 31 } }, additionalProperties: false },
@@ -259,7 +277,7 @@ export function realMcp({ config, backend }) {
   const commandsEnabled = readEnabled && config.env.TESLA_COMMANDS_ENABLED === 'true' && config.env.TESLA_COMMAND_EXECUTION_ENABLED === 'true';
   const googlePlacesEnabled = locationEnabled && googlePlacesProductionEnabled(config.env) && nativeNavigationEnabled(config, 'waypoints');
   const gpsDiagnosticEnabled=commandsEnabled&&(gpsRouteCandidateEnabled(config)||config.env.TESLA_GPS_ROUTE_FIXTURE_ENABLED==='true');
-  const exposedTools = [connectTool, prepareVehicleCommandSetupTool, ...(readEnabled ? [connectionStatusTool, commandCatalogTool, ...connectivityTools, tool, vehicleStatusTool, liveVehicleDataTool, vehicleReadingHistoryTool, chargingHistoryTool, vehicleSchedulesTool, energyEstimateTool, chargingCostTool, tripPlanTool, freeToXTariffTool, ...preferencesTools] : []), ...(locationEnabled ? [frequentWaypointsTool,...(googlePlacesEnabled?[resolveWaypointPlacesTool]:[]),locationTool, liveVehicleAddressTool, nearbyChargingSitesTool, ...savedTripPlaceTools, ...roadTripTools, chargingRouteTool, smartTripTool, plannedTripTool] : []), ...(commandsEnabled ? [prepareVehicleCommandTool, executeVehicleCommandTool, executeRequestedVehicleCommandTool, vehicleCommandStatusTool,...(gpsDiagnosticEnabled?[startGPSNavigationDiagnosticTool,appendGPSNavigationDiagnosticTool]:[])] : [])];
+  const exposedTools = [connectTool, prepareVehicleCommandSetupTool, ...(readEnabled ? [connectionStatusTool, commandCatalogTool, ...connectivityTools, tool, vehicleStatusTool, liveVehicleDataTool, vehicleReadingHistoryTool, chargingHistoryTool, serviceHistoryTool, serviceVisitDetailsTool, vehicleSchedulesTool, energyEstimateTool, chargingCostTool, tripPlanTool, freeToXTariffTool, ...preferencesTools] : []), ...(locationEnabled ? [frequentWaypointsTool,...(googlePlacesEnabled?[resolveWaypointPlacesTool]:[]),locationTool, liveVehicleAddressTool, nearbyChargingSitesTool, ...savedTripPlaceTools, ...roadTripTools, chargingRouteTool, smartTripTool, plannedTripTool] : []), ...(commandsEnabled ? [prepareVehicleCommandTool, executeVehicleCommandTool, executeRequestedVehicleCommandTool, vehicleCommandStatusTool,...(gpsDiagnosticEnabled?[startGPSNavigationDiagnosticTool,appendGPSNavigationDiagnosticTool]:[])] : [])];
   const toolsWithAuthMetadata = exposedTools.map(tool => ({...tool,
     ...(nativeNavigationEnabled(config,'supercharger')&&['prepare_vehicle_command','execute_requested_vehicle_command'].includes(tool.name)?{inputSchema:{...tool.inputSchema,properties:{...tool.inputSchema.properties,operation:{type:'string',enum:Object.keys(operationDefinitions())}}}}:{}),
     _meta:{...tool._meta,securitySchemes:tool.securitySchemes}}));
@@ -357,6 +375,8 @@ export function realMcp({ config, backend }) {
           name === 'get_connection_status' ? backend.connectionStatus(subject, { includeReadReadiness: true }).then(status => ({...status, mcp_permissions: mcpCallerPermissions(request, config)})) :
             name === 'get_vehicle_location' ? backend.location(subject, args.reservePercent) : name === 'get_live_vehicle_address' ? liveVehicleAddress(backend, subject, args) :
               name === 'get_nearby_charging_sites' ? backend.nearbyChargingSites(subject) :
+                name === 'get_service_history' ? backend.serviceHistory(subject, {page: args.page, perPage: args.per_page}) :
+                name === 'get_service_visit_details' ? backend.serviceVisitDetails(subject, checkedServiceVisitId(args.service_visit_id)) :
                 name === 'get_charging_history' ? backend.chargingHistory(subject, args.days) :
                   name === 'get_vehicle_schedules' ? backend.vehicleSchedules(subject) :
                   name === 'get_vehicle_reading_history' ? backend.vehicleReadingHistory(subject, args.days) :

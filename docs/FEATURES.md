@@ -2,7 +2,7 @@
 
 ## What this catalog represents
 
-The implementation exposes **38 named MCP tools** across the five major reference groups, plus **75 operation names** in the separate Tesla command catalog. Not all MCP tools appear simultaneously: runtime feature gates and OAuth scopes control discovery and invocation. The count is a **code inventory**; separately, the developer confirms all 75 operations were successfully tested on their real Tesla, without an independent audit or documented exact revision.
+The implementation exposes **40 named MCP tools** across the five major reference groups, plus **75 operation names** in the separate Tesla command catalog. Not all MCP tools appear simultaneously: runtime feature gates and OAuth scopes control discovery and invocation. The count is a **code inventory**; separately, the developer confirms all 75 operations were successfully tested on their real Tesla, without an independent audit or documented exact revision.
 
 | Added layer | Why it matters to a user | Source / evidence |
 | --- | --- | --- |
@@ -62,6 +62,8 @@ The MCP access token is **not** the Tesla access token. A user must never paste 
 | `get_vehicle_connectivity` | Queries the backend connectivity status. | Availability and freshness are limited by Tesla responses. |
 | `get_vehicle_mobile_access` | Retrieves the mobile access-related connectivity result when supported. | Does not itself command the vehicle. |
 | `get_charging_history` | Requests recent Tesla charging sessions (up to 31 days) and returned session properties. | Historic, not a live meter or universal invoice ledger. |
+| `get_service_history` | Reads one page of the current owner’s completed Tesla service visits, newest first. | Uses Tesla Fleet API and `vehicle_device_data`; page through `pagination.next`, deduplicating visit IDs across pages; excludes previous owners’ visits. |
+| `get_service_visit_details` | Reads available correction codes, work description, warranty/payment type and final invoice totals for a service visit. | May return no work items or costs; limited to IDs returned for this vehicle; no command or wake. |
 | `get_vehicle_schedules` | Reads native charge and preconditioning schedules. | A live Tesla read; **does not modify** schedules. |
 
 ## 3. Vehicle location, addresses and nearby chargers
