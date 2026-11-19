@@ -1133,7 +1133,7 @@ export function createTeslaBackend({ config: c, store, fetcher = fetch, now = Da
     url.searchParams.set('per_page', String(perPage));
     const data = await jsonFetch(observeReadStatus('service_history'), url.href, {
       headers: { authorization: `Bearer ${access}`, 'content-type': 'application/json', accept: 'application/json' }
-    });
+    }, { 403: 'service_history_not_available', 503: 'service_history_temporarily_unavailable' });
     const response = data?.response;
     if (!response || !Array.isArray(response.service_visits) || response.service_visits.length > perPage ||
         !response.pagination || !Object.hasOwn(response.pagination, 'next')) throw Error('upstream');
@@ -1158,7 +1158,7 @@ export function createTeslaBackend({ config: c, store, fetcher = fetch, now = Da
     const url = `${c.fleet}/api/1/vehicles/${vin}/service_history/${encodeURIComponent(serviceVisitId)}`;
     const data = await jsonFetch(observeReadStatus('service_visit_details'), url, {
       headers: { authorization: `Bearer ${access}`, 'content-type': 'application/json', accept: 'application/json' }
-    });
+    }, { 403: 'service_history_not_available', 404: 'service_visit_not_found', 503: 'service_history_temporarily_unavailable' });
     const visit = data?.response;
     if (!visit || typeof visit !== 'object' || Array.isArray(visit) ||
         visit.service_visit_id !== serviceVisitId ||
