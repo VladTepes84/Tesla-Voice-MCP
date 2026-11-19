@@ -112,6 +112,10 @@ const serviceHistoryTool = {
   annotations: { readOnlyHint: true, destructiveHint: false, openWorldHint: true },
   securitySchemes: [{ type: 'oauth2', scopes: ['battery:read'] }]
 };
+function checkedServiceVisitId(value) {
+  if (typeof value !== 'string' || !/^[A-Za-z0-9_-]{1,128}$/.test(value)) throw Error('invalid_arguments');
+  return value;
+}
 const serviceVisitDetailsTool = {
   name: 'get_service_visit_details',
   description: 'Reads work items and invoice totals for a single Tesla service visit. No commands or wake_up; uses Fleet API quota.',
@@ -372,7 +376,7 @@ export function realMcp({ config, backend }) {
             name === 'get_vehicle_location' ? backend.location(subject, args.reservePercent) : name === 'get_live_vehicle_address' ? liveVehicleAddress(backend, subject, args) :
               name === 'get_nearby_charging_sites' ? backend.nearbyChargingSites(subject) :
                 name === 'get_service_history' ? backend.serviceHistory(subject, {page: args.page, perPage: args.per_page}) :
-                name === 'get_service_visit_details' ? backend.serviceVisitDetails(subject, args.service_visit_id) :
+                name === 'get_service_visit_details' ? backend.serviceVisitDetails(subject, checkedServiceVisitId(args.service_visit_id)) :
                 name === 'get_charging_history' ? backend.chargingHistory(subject, args.days) :
                   name === 'get_vehicle_schedules' ? backend.vehicleSchedules(subject) :
                   name === 'get_vehicle_reading_history' ? backend.vehicleReadingHistory(subject, args.days) :
