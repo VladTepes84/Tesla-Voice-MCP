@@ -8,6 +8,8 @@ Tesla Voice MCP is an experimental, open-source, **self-hosted Model Context Pro
 
 > **Independent community project.** Not affiliated with or endorsed by Tesla or OpenAI. Not a hosted service or a one-click plugin. Every operator must deploy their own server, obtain their own authorization and check account, firmware, vehicle and AI-client compatibility. No live operation or 16-stop on-screen result is guaranteed.
 
+**[Changelog & complete Tesla API / command index](CHANGELOG.md)** — dated updates, all 40 MCP tools, all 75 vehicle operations, Tesla endpoint mappings, and verification limits.
+
 ## One MCP server, several AI clients — text first, voice where supported
 
 The same **independently hosted remote MCP server** is designed for integration with **ChatGPT, Claude, Gemini, Grok and other compatible AI clients**. Their vendors document custom remote MCP features, so this project's integration is **expected where transport, OAuth and tool permissions align**. **No end-to-end compatibility claim for those other AI platforms is made without testing.**
