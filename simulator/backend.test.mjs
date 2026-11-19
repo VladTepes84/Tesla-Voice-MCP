@@ -1513,11 +1513,15 @@ test('service history handles Tesla errors once without retries or leaking respo
     for (const status of [403, 404, 429, 503]) {
       const before = f.calls.length;
       f.remote(async () => Response.json({ error: 'PRIVATE_UPSTREAM_TOKEN' }, { status }));
-      await assert.rejects(() => f.backend.serviceHistory('owner'), status === 403 ? /reauthorize/ : /upstream/);
+      await assert.rejects(() => f.backend.serviceHistory('owner'), status === 403 ? /service_history_not_available/ : status === 503 ? /service_history_temporarily_unavailable/ : /upstream/);
       assert.equal(f.calls.length, before + 1, 'read must not retry');
     }
   } finally { console.info = original; }
-  assert.equal(logs.length, 4);
+  const beforeDetail = f.calls.length;
+  f.remote(async () => Response.json({ error: 'PRIVATE_UPSTREAM_TOKEN' }, { status: 404 }));
+  await assert.rejects(() => f.backend.serviceVisitDetails('owner', 'visit_01'), /service_visit_not_found/);
+  assert.equal(f.calls.length, beforeDetail + 1);
+  assert.equal(logs.length, 5);
   assert.doesNotMatch(JSON.stringify(logs), /PRIVATE_UPSTREAM_TOKEN|fake-access|fake-refresh/);
 });
 test('service history MCP tools require delegated read scope and preserve charging tool', async () => {
