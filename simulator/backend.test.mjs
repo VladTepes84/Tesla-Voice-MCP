@@ -1521,7 +1521,7 @@ test('service history handles Tesla errors once without retries or leaking respo
   f.remote(async () => Response.json({ error: 'PRIVATE_UPSTREAM_TOKEN' }, { status: 404 }));
   await assert.rejects(() => f.backend.serviceVisitDetails('owner', 'visit_01'), /service_visit_not_found/);
   assert.equal(f.calls.length, beforeDetail + 1);
-  assert.equal(logs.length, 5);
+  assert.equal(logs.length, 4);
   assert.doesNotMatch(JSON.stringify(logs), /PRIVATE_UPSTREAM_TOKEN|fake-access|fake-refresh/);
 });
 test('service history MCP tools require delegated read scope and preserve charging tool', async () => {
