@@ -1453,3 +1453,101 @@ test('nearby failures log only HTTP status and a generic error class/message', a
     assert.doesNotMatch(JSON.stringify(events), /DO_NOT_LOG|fake-access|fake-refresh|latitude|longitude/i);
   }
 });
+
+test('service history returns allowlisted paginated visits with no implicit vehicle wake', async () => {
+  const f = fixture();
+  await f.callback(await f.begin());
+  const before = f.calls.length;
+  f.remote(async () => Response.json({ response: {
+    service_visits: [
+      { service_visit_id: 'service-001', completed_at: '2026-11-11T11:00:00Z', status: 'delivered',
+        visit_type: 'service_center', vin: 'PRIVATE_VIN', secret: 'PRIVATE_SECRET' },
+      { service_visit_id: 'service-001', completed_at: '2026-11-11T11:00:00Z', status: 'delivered', visit_type: 'service_center' }
+    ],
+    pagination: { next: 2, count: null, pages: null, secret: 'PRIVATE_SECRET' }
+  }}));
+  const result = await f.backend.serviceHistory('owner', { page: 1, perPage: 20 });
+  assert.equal(f.calls.length, before + 1);
+  assert.equal(new URL(f.calls.at(-1).url).pathname, '/api/1/vehicles/'+env.TESLA_VEHICLE_VIN+'/service_history');
+  assert.equal(new URL(f.calls.at(-1).url).searchParams.get('page'), '1');
+  assert.equal(new URL(f.calls.at(-1).url).searchParams.get('per_page'), '20');
+  assert.equal(f.calls.at(-1).opts.method, undefined);
+  assert.equal(f.calls.at(-1).opts.headers.authorization, 'Bearer fake-access');
+  assert.deepEqual(result.pagination, { next: 2 });
+  assert.equal(result.visits.length, 1);
+  assert.equal(result.visits[0].service_visit_id, 'service-001');
+  assert.equal(result.no_vehicle_wake, true);
+  assert.doesNotMatch(JSON.stringify(result), /PRIVATE|fake-access|fake-refresh|5YJ3E1EA0LF000000/);
+  f.remote(async () => Response.json({ response: { service_visits: [], pagination: { next: null, count: null, pages: null } } }));
+  const page2 = await f.backend.serviceHistory('owner', { page: 2, perPage: 50 });
+  assert.deepEqual(page2, { visits: [], pagination: { next: null }, source: 'tesla_fleet_api', no_vehicle_wake: true });
+  assert.equal(new URL(f.calls.at(-1).url).searchParams.get('page'), '2');
+});
+test('service visit details allowlist work and invoice cost and reject invalid IDs', async () => {
+  const f = fixture();
+  await f.callback(await f.begin());
+  const before = f.calls.length;
+  await assert.rejects(() => f.backend.serviceVisitDetails('owner', '../PRIVATE'), /invalid_arguments/);
+  await assert.rejects(() => f.backend.serviceHistory('owner', { page: 0 }), /invalid_arguments/);
+  await assert.rejects(() => f.backend.serviceHistory('owner', { page: 1, perPage: 51 }), /invalid_arguments/);
+  assert.equal(f.calls.length, before, 'invalid arguments must not reach Tesla');
+  f.remote(async () => Response.json({ response: {
+    service_visit_id: 'visit_01', completed_at: '2026-11-11T11:00:00Z',
+    status: 'delivered', visit_type: 'service_center', private_detail: 'PRIVATE_SECRET',
+    work_items: [{ correction_code: 'ABC', description: 'Replaced component', pay_type: 'warranty', private_note: 'PRIVATE_SECRET' }],
+    cost: { currency: 'EUR', subtotal: 100, tax: 22, total: 122, paid: 122, due: 0, private_note: 'PRIVATE_SECRET' }
+  }}));
+  const result = await f.backend.serviceVisitDetails('owner', 'visit_01');
+  assert.equal(new URL(f.calls.at(-1).url).pathname, '/api/1/vehicles/'+env.TESLA_VEHICLE_VIN+'/service_history/visit_01');
+  assert.deepEqual(result.work_items, [{ correction_code: 'ABC', description: 'Replaced component', pay_type: 'warranty' }]);
+  assert.deepEqual(result.cost, { currency: 'EUR', subtotal: 100, tax: 22, total: 122, paid: 122, due: 0 });
+  assert.equal(result.no_vehicle_wake, true);
+  assert.doesNotMatch(JSON.stringify(result), /PRIVATE_SECRET|fake-access|fake-refresh|5YJ3E1EA0LF000000/);
+});
+test('service history handles Tesla errors once without retries or leaking response bodies', async () => {
+  const f = fixture();
+  await f.callback(await f.begin());
+  const original = console.info; const logs = [];
+  console.info = (...args) => logs.push(args);
+  try {
+    for (const status of [403, 404, 429, 503]) {
+      const before = f.calls.length;
+      f.remote(async () => Response.json({ error: 'PRIVATE_UPSTREAM_TOKEN' }, { status }));
+      await assert.rejects(() => f.backend.serviceHistory('owner'), status === 403 ? /reauthorize/ : /upstream/);
+      assert.equal(f.calls.length, before + 1, 'read must not retry');
+    }
+  } finally { console.info = original; }
+  assert.equal(logs.length, 4);
+  assert.doesNotMatch(JSON.stringify(logs), /PRIVATE_UPSTREAM_TOKEN|fake-access|fake-refresh/);
+});
+test('service history MCP tools require delegated read scope and preserve charging tool', async () => {
+  const calls = [];
+  const backend = {
+    serviceHistory: async (subject, args) => { calls.push(['list', subject, args]); return { visits: [], pagination: { next: null } }; },
+    serviceVisitDetails: async (subject, id) => { calls.push(['detail', subject, id]); return { service_visit_id: id }; }
+  };
+  const run = realMcp({ config, backend });
+  const rpc = async (method, params, scope) => {
+    const initial = mcpRequest(method, params);
+    const headers = new Headers(initial.headers);
+    headers.set('authorization', 'Bearer ' + jwt({ scope }));
+    return (await run(new Request(config.audience, { method: 'POST', headers, body: initial.body, duplex: 'half' }))).json();
+  };
+  const listed = await rpc('tools/list', {}, 'battery:read');
+  const names = listed.result.tools.map(item => item.name);
+  assert.ok(names.includes('get_service_history') && names.includes('get_service_visit_details'));
+  assert.ok(names.includes('get_charging_history'));
+  const denied = await rpc('tools/call', { name: 'get_service_history', arguments: {} }, 'tesla:connect');
+  assert.equal(denied.result.isError, true);
+  assert.equal(JSON.parse(denied.result.content[0].text).error.required_scope, 'battery:read');
+  assert.equal(calls.length, 0);
+  const result = await rpc('tools/call', { name: 'get_service_history', arguments: { page: 3, per_page: 10 } }, 'battery:read');
+  assert.equal(result.result.isError, false);
+  assert.deepEqual(calls[0], ['list', 'owner', { page: 3, perPage: 10 }]);
+  const detail = await rpc('tools/call', { name: 'get_service_visit_details', arguments: { service_visit_id: 'visit_01' } }, 'battery:read');
+  assert.equal(detail.result.isError, false);
+  assert.deepEqual(calls[1], ['detail', 'owner', 'visit_01']);
+  const bad = await rpc('tools/call', { name: 'get_service_visit_details', arguments: { service_visit_id: '../private' } }, 'battery:read');
+  assert.ok(bad.error || bad.result?.isError);
+  assert.equal(calls.length, 2);
+});
