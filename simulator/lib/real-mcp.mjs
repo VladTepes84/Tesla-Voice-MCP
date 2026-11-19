@@ -107,19 +107,15 @@ const vehicleReadingHistoryTool = {
 };
 const serviceHistoryTool = {
   name: 'get_service_history',
-  description: 'Legge su richiesta lo storico degli interventi Tesla. Non risveglia il veicolo; consuma quota Fleet API. Dati privati.',
-  inputSchema: { type: 'object', properties: {
-    page: { type: 'integer', minimum: 1, maximum: 100 },
-    per_page: { type: 'integer', minimum: 1, maximum: 50 }
-  }, additionalProperties: false },
+  description: 'Reads one page of the current owner Tesla service visits, on demand without wake_up or commands. Uses Fleet API quota.',
+  inputSchema: { type: 'object', properties: { page: { type: 'integer', minimum: 1, maximum: 1000 }, per_page: { type: 'integer', minimum: 1, maximum: 50 } }, additionalProperties: false },
   annotations: { readOnlyHint: true, destructiveHint: false, openWorldHint: true },
   securitySchemes: [{ type: 'oauth2', scopes: ['battery:read'] }]
 };
 const serviceVisitDetailsTool = {
   name: 'get_service_visit_details',
-  description: 'Legge i dettagli di un intervento Tesla selezionato dallo storico. Non risveglia il veicolo; dati privati.',
-  inputSchema: { type: 'object', properties: {
-    service_visit_id: { type: 'string', pattern: '^[A-Za-z0-9_-]{1,128}
+  description: 'Reads the work and cost of a Tesla service visit on demand. No vehicle commands or wake_up.',
+  inputSchema: { type: 'object', properties: { service_visit_id: { type: 'string', pattern: '^[A-Za-z0-9_-]{1,128}
   name: 'get_charging_history', description: 'Requests Tesla charging sessions for up to the last 31 days, including available locations, times, and amounts. This is historical data, not live vehicle status; VINs and invoices are not returned.',
   inputSchema: { type: 'object', properties: { days: { type: 'integer', minimum: 1, maximum: 31 } }, additionalProperties: false },
   annotations: { readOnlyHint: true, destructiveHint: false, openWorldHint: true },
@@ -389,8 +385,7 @@ export function realMcp({ config, backend }) {
   };
 }
 
- }
-  }, required: ['service_visit_id'], additionalProperties: false },
+ } }, required: ['service_visit_id'], additionalProperties: false },
   annotations: { readOnlyHint: true, destructiveHint: false, openWorldHint: true },
   securitySchemes: [{ type: 'oauth2', scopes: ['battery:read'] }]
 };
