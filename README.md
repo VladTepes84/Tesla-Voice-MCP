@@ -4,6 +4,8 @@
 
 Tesla Voice MCP is an experimental, open-source, **self-hosted Model Context Protocol (MCP) server** that connects compatible AI clients to selected Tesla Fleet API capabilities—and combines them with road routing, energy estimates, charging-source discovery, private preferences and explicit command safeguards.
 
+**📋 [CHANGELOG — release history, all 40 MCP tools, 75 Tesla commands & Fleet API routes](CHANGELOG.md)** — dated updates, what each capability does, and which operations are gated or unavailable by default.
+
 **The distinction:** Tesla Fleet API supplies authorized vehicle data and operations. **This project supplies typed MCP tools, multi-provider workflows, provenance and security gates.** Your AI client supplies conversational reasoning and, if supported, voice. It is not a model, a standalone voice app or a replacement for Tesla's official app.
 
 > **Independent community project.** Not affiliated with or endorsed by Tesla or OpenAI. Not a hosted service or a one-click plugin. Every operator must deploy their own server, obtain their own authorization and check account, firmware, vehicle and AI-client compatibility. No live operation or 16-stop on-screen result is guaranteed.
