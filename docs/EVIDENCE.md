@@ -6,6 +6,14 @@ This document tells readers **what source code and tests establish—and what th
 
 **Reference:** sanitized release candidate, inspected on 2026-11-17. For reproducibility, pin the exact Git commit visible on the repository page and verify the current CI runs; do not rely on the review date as a live-deployment attestation.
 
+## Service History integration — 19 November 2026
+
+The public repository adds two on-demand, read-only MCP tools: `get_service_history` and `get_service_visit_details`. Tesla published these endpoints in its [Fleet API changelog](https://developer.tesla.com/docs/fleet-api/announcements) and [vehicle endpoint reference](https://developer.tesla.com/docs/fleet-api/endpoints/vehicle-endpoints) on 11 November 2026. The implementation requests `vehicle_device_data` and never sends a vehicle command or `wake_up`.
+
+**Verified offline for source commit `3a69384e08d9`:** [Node/Go/Redis CI](https://github.com/VladTepes84/Tesla-Voice-MCP/actions/runs/44490897133), **541/541 Node tests passed**, Go test/build/vet passed; [Gitleaks](https://github.com/VladTepes84/Tesla-Voice-MCP/actions/runs/44490896646) passed. Tests include paging, input validation, OAuth tool boundaries, HTTP errors, no retries and response-field allowlisting.
+
+**Not verified:** live Tesla service-history data for a particular owner or vehicle, invoice availability, precise per-call cost, end-to-end consumer voice operation or a separate public-hosted deployment. A GitHub merge alone is not a live rollout. Operators must configure billing limits and authorization separately; the existing production request budget can be unlimited.
+
 ## Credential-free clean-room smoke test
 
 The source includes `simulator/clean-room-install.test.mjs`, which starts a localhost-only adapter and exercises actual MCP handlers with **ephemeral synthetic OAuth**. It verifies protected-resource discovery, JWT issuer/audience/subject/scope/expiry enforcement, tool listing, synthetic battery read and rejection of unavailable vehicle commands.
@@ -21,7 +29,7 @@ The developer reports operational use and online testing on their own Tesla Mode
 | Claim | Source reference | Evidence class | Unproven or conditional part |
 | --- | --- | --- | --- |
 | MCP tool catalog with authorization | `simulator/lib/real-mcp.mjs`, `mcp-tool-auth.mjs` | Implemented in source; offline auth tests | Real client connection in every product/plan |
-| 38 named MCP tools documented | `docs/FEATURES.md`, `docs/TOOLS_REFERENCE.md`, tool definitions | Source inventory | All tools visible simultaneously or usable in any deployment |
+| 40 named MCP tools documented | `docs/FEATURES.md`, `docs/TOOLS_REFERENCE.md`, tool definitions | Source inventory | All tools visible simultaneously or usable in any deployment |
 | 75 command names cataloged | `simulator/lib/operation-plans.mjs` | Source inventory; developer confirms successful real-vehicle tests of all 75 operations | Independent audit, exact tested revision and support on each Tesla; eight default SDK transports unavailable |
 | Encrypted account state and private preferences | `simulator/lib/store.mjs`, `security.mjs` | Implemented and covered by local tests | Deployed infrastructure security or regulatory compliance |
 | Cached vehicle data and app reading history | `simulator/lib/real-mcp.mjs`, Tesla/store modules | Implemented in source | Continuous telemetry or perfect freshness |
