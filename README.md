@@ -29,7 +29,7 @@ You speak or type -> compatible AI client -> your HTTPS /mcp -> scoped tools
 | --- | --- | --- |
 | **[Beginner's Guide](docs/BEGINNERS_GUIDE.md)** — safe offline trial, step by step | **[Guided demo](docs/DEMO.md)** — see synthetic end-to-end scenarios | **[Architecture & security](docs/ARCHITECTURE.md)** — implementation and trust boundaries |
 | [FAQ](docs/FAQ.md) — plain-English answers | [Real workflows](docs/WORKFLOWS.md) — battery, travel, charging, commands | [Operator runbook](docs/OPERATOR_RUNBOOK.md) — deployment, diagnostics and recovery |
-| [Installation](docs/INSTALLATION.md) — independent setup | [Capability reference](docs/FEATURES.md) — exact feature inventory | [All 38 MCP tools](docs/TOOLS_REFERENCE.md) and [evidence](docs/EVIDENCE.md) |
+| [Installation](docs/INSTALLATION.md) — independent setup | [Capability reference](docs/FEATURES.md) — exact feature inventory | [All 40 MCP tools](docs/TOOLS_REFERENCE.md) and [evidence](docs/EVIDENCE.md) |
 
 **[Full documentation index](docs/INDEX.md)** · **[Why this is more than a Fleet API wrapper](docs/WHY_MCP.md)** · **[Connect any compatible AI](docs/AI_CLIENTS.md)** · **[Google Places guide](docs/GOOGLE_PLACES_SETUP.md)**
 
@@ -40,7 +40,7 @@ You speak or type -> compatible AI client -> your HTTPS /mcp -> scoped tools
 
 Use timestamped cached readings without implicit wake, or explicitly request an on-demand vehicle read. Selected charging history, connectivity, schedules and app-collected samples are exposed when available. Live reads can use Tesla quota and may contact or wake the car.
 
-**Representative tools:** `get_battery`, `get_vehicle_status`, `get_live_vehicle_data`, `get_vehicle_reading_history`, `get_charging_history`.
+**Representative tools:** `get_battery`, `get_vehicle_status`, `get_live_vehicle_data`, `get_vehicle_reading_history`, `get_charging_history`, `get_service_history`, `get_service_visit_details`.
 
 </details>
 
